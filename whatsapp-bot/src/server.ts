@@ -1,9 +1,10 @@
+import axios from "axios";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import twilo from "twilio";
-import axios from "axios";
-import { Command } from "./entities";
+
 import { cache, mockThreads, contacts } from "./constants";
+import { Command } from "./entities";
 import { delay } from "./utils";
 
 dotenv.config();
