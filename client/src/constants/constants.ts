@@ -1,0 +1,3 @@
+export enum ReactQueryKey {
+  OFFICIAL_STATEMENTS = "OFFICIAL_STATEMENTS",
+}
