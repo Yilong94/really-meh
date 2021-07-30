@@ -6,9 +6,9 @@ from extended_user.models import ExtendedUser
 class Thread(models.Model):
     content = models.TextField()
     creatorUser = models.ForeignKey(ExtendedUser, on_delete=models.SET_NULL, null=True)
-    archivedAt = models.DateTimeField(default=None)
-    publishedAt = models.DateTimeField(default=None)
-    editedAt = models.DateTimeField(default=None)
+    archivedAt = models.DateTimeField(default=None, null=True)
+    publishedAt = models.DateTimeField(default=None, null=True)
+    editedAt = models.DateTimeField(default=None, null=True)
 
     ratings = models.ManyToManyField(
         ExtendedUser,

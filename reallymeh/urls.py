@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+api_urls = [
+    path('thread/', include('thread.urls', namespace='thread'), name='thread'),
+]
+
 urlpatterns = [
+    path('api/', include(api_urls), name='api'),
     path('admin/', admin.site.urls),
 ]
