@@ -1,7 +1,9 @@
 import { FC } from "react";
 
+import OfficialStatementsSection from "../../components/OfficialStatementsSection";
+
 const HomePage: FC = () => {
-  return <div>Home</div>;
+  return <OfficialStatementsSection />;
 };
 
 export default HomePage;
