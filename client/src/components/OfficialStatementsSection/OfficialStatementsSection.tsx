@@ -25,7 +25,7 @@ const officialStatements: OfficialStatement[] = [
 
 const OfficialStatementsSection: FC = () => {
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer className="p-4">
       <div className="text-base font-bold">Fake News</div>
       <div className="text-xs">
         Current debunked fake news that have been circulating in Singapore.

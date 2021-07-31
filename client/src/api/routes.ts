@@ -1,3 +1,4 @@
-export const apiPrepend = "/api";
+export const API_PREPEND = "/api";
 
-export const officialStatements = apiPrepend + "/official-statements";
+export const OFFICIAL_STATEMENTS = API_PREPEND + "/official-statements";
+export const POSTS = API_PREPEND + "/posts";
