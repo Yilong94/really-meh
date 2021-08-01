@@ -14,13 +14,13 @@ const BarColumn: FC<BarColumnProps> = ({ value, label }) => {
 
   return (
     <div className="flex items-center">
-      <div className="h-5 bg-white flex-grow">
-        <div style={style} className="h-5 bg-gray-400 flex items-center">
+      <div className="flex-grow h-5 bg-white">
+        <div style={style} className="flex items-center h-5 bg-gray-400">
           <span className="absolute ml-2 text-xs">{label}</span>
         </div>
       </div>
 
-      <div className="text-xs ml-2">{`${roundedValue}%`}</div>
+      <div className="ml-2 text-xs">{`${roundedValue}%`}</div>
     </div>
   );
 };
@@ -32,8 +32,8 @@ interface Props {
 
 const BarGraph: FC<Props> = ({ data, question }) => {
   return (
-    <div className="border-2 p-2">
-      <div className="text-sm font-bold mb-2">{question}</div>
+    <div className="p-2 border-2">
+      <div className="mb-2 text-sm font-bold">{question}</div>
       <div className="space-y-1">
         {Object.keys(data).map((label, index) => {
           return <BarColumn key={index} label={label} value={data[label]} />;
