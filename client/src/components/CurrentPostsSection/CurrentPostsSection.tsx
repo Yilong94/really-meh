@@ -14,10 +14,10 @@ const currentPosts: CurrentPost[] = [
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
     poll: {
-      trueInPercent: 0.2,
+      trueInPercent: 0.0,
       swTrueInPercent: 0.3,
       swFalseInPercent: 0.4,
-      falseInPercent: 0.1,
+      falseInPercent: 1.0,
     },
     numComment: 123,
   },
@@ -62,7 +62,7 @@ const CurrentPostsSection: FC = () => {
 
   return (
     <ResponsiveContainer className="bg-white">
-      <div className="p-4">
+      <div className="px-4 py-2">
         <SearchBar
           searchValue={searchValue}
           onSearchValueChange={handleSearchValueChange}
