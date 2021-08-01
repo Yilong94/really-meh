@@ -28,24 +28,24 @@ const CurrentPostsListItem: FC<Props> = ({
   }, {});
 
   return (
-    <div className="bg-white p-4 border-b border-gray-400 last:border-b-0">
+    <div className="p-4 bg-white border-b border-gray-400 last:border-b-0">
       <div className="text-xs">{`Posted by ${creator}`}</div>
       <div className="text-xs">{createdAtFormatted}</div>
       <div className="text-base font-bold">{title}</div>
       {tags.map((tag, index) => {
         return <Pill key={index} text={tag}></Pill>;
       })}
-      <div className="text-sm py-2">{content}</div>
+      <div className="py-2 text-sm">{content}</div>
       <BarGraph
         data={dataFormatted}
         question="To what extent is this piece of news true?"
       />
-      <div className="space-x-2 mt-4 flex">
-        <div className="space-x-1 flex items-center">
+      <div className="flex mt-4 space-x-2">
+        <div className="flex items-center space-x-1">
           <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
           <div className="text-xs">{numComment} Comments</div>
         </div>
-        <div className="space-x-1 flex items-center">
+        <div className="flex items-center space-x-1">
           <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
           <div className="text-xs">Share</div>
         </div>

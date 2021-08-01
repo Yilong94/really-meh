@@ -25,9 +25,9 @@ const OfficialStatementsCarousel: FC<Props> = ({ officialStatements }) => {
       }`}
     >
       {isLoading ? (
-        <FontAwesomeIcon icon={faSpinner} className="animate-spin h-5 w-5" />
+        <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
       ) : (
-        <div className="flex overflow-x-auto space-x-2 my-2">
+        <div className="flex my-2 overflow-x-auto space-x-2">
           {officialStatements.map(({ statement, ministry }, index) => {
             return (
               <OfficialStatementsCarouselItem

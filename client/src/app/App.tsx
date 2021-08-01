@@ -6,7 +6,7 @@ import HomePage from "../pages/HomePage";
 
 const App: FC = () => {
   return (
-    <div className="bg-gray-200 h-full">
+    <div className="h-full bg-gray-200">
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />

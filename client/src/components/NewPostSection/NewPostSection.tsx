@@ -15,19 +15,19 @@ const NewPostSection = () => {
   };
 
   return (
-    <ResponsiveContainer className="flex bg-gray-400 p-4">
-      <div className="h-24 flex-grow p-2 bg-white">
+    <ResponsiveContainer className="flex p-4 bg-gray-400">
+      <div className="flex-grow h-24 p-2 bg-white">
         <textarea
-          className="h-full w-full"
+          className="w-full h-full"
           placeholder="What fake news did you spot today?"
           onClick={handleClick}
         ></textarea>
       </div>
 
-      <div className="rounded-full bg-gray-200 ml-2 p-2 w-8 h-8 self-start flex justify-center items-center">
+      <div className="flex items-center self-start justify-center w-8 h-8 p-2 ml-2 bg-gray-200 rounded-full">
         <FontAwesomeIcon icon={faImage} />
       </div>
-      <div className="rounded-full bg-gray-200 ml-2 p-2 w-8 h-8 self-start flex justify-center items-center">
+      <div className="flex items-center self-start justify-center w-8 h-8 p-2 ml-2 bg-gray-200 rounded-full">
         <FontAwesomeIcon icon={faYoutube} />
       </div>
     </ResponsiveContainer>

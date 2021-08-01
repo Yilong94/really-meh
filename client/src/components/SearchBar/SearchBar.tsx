@@ -17,7 +17,7 @@ const SearchBar: FC<Props> = ({ searchValue, onSearchValueChange }) => {
     <>
       <div className="flex items-center">
         <FontAwesomeIcon
-          className="text-xl m-2"
+          className="m-2 text-xl"
           icon={faSearch}
         ></FontAwesomeIcon>
         <input
