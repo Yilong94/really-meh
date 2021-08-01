@@ -32,7 +32,7 @@ interface Props {
 
 const BarGraph: FC<Props> = ({ data, question }) => {
   return (
-    <div className="p-2 border-2">
+    <div className="p-2 border border-black">
       <div className="mb-2 text-sm font-bold">{question}</div>
       <div className="space-y-1">
         {Object.keys(data).map((label, index) => {

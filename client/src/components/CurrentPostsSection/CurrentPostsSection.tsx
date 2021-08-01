@@ -7,6 +7,7 @@ import SearchBar from "../SearchBar";
 
 const currentPosts: CurrentPost[] = [
   {
+    postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
     creator: "Angelina Than Xiao Mei",
     createdAt: "2021-01-11T10:00:00",
     title: "Poll title",
@@ -14,14 +15,18 @@ const currentPosts: CurrentPost[] = [
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
     poll: {
-      trueInPercent: 0.0,
-      swTrueInPercent: 0.3,
-      swFalseInPercent: 0.4,
-      falseInPercent: 1.0,
+      data: {
+        true: 0.0,
+        "sw true": 0.3,
+        "sw false": 0.4,
+        false: 1.0,
+      },
+      hasVoted: true,
     },
     numComment: 123,
   },
   {
+    postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
     creator: "Angelina Than Xiao Mei",
     createdAt: "2021-01-11T10:00:00",
     title: "Poll title",
@@ -29,14 +34,18 @@ const currentPosts: CurrentPost[] = [
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
     poll: {
-      trueInPercent: 0.2,
-      swTrueInPercent: 0.3,
-      swFalseInPercent: 0.4,
-      falseInPercent: 0.1,
+      data: {
+        true: 0.2,
+        "sw true": 0.3,
+        "sw false": 0.4,
+        false: 0.1,
+      },
+      hasVoted: true,
     },
     numComment: 123,
   },
   {
+    postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
     creator: "Angelina Than Xiao Mei",
     createdAt: "2021-01-11T10:00:00",
     title: "Poll title",
@@ -44,10 +53,13 @@ const currentPosts: CurrentPost[] = [
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
     poll: {
-      trueInPercent: 0.2,
-      swTrueInPercent: 0.3,
-      swFalseInPercent: 0.4,
-      falseInPercent: 0.1,
+      data: {
+        true: 0.2,
+        "sw true": 0.3,
+        "sw false": 0.4,
+        false: 0.1,
+      },
+      hasVoted: false,
     },
     numComment: 123,
   },

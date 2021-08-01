@@ -6,7 +6,7 @@ import OfficialStatementsSection from "../../components/OfficialStatementsSectio
 
 const HomePage: FC = () => {
   return (
-    <div className="flex-auto overflow-y-auto m-h-0">
+    <div className="flex-auto min-h-0 overflow-y-auto">
       <OfficialStatementsSection />
       <NewPostSection />
       <CurrentPostsSection />
