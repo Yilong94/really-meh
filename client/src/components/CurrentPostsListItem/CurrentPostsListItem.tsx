@@ -1,3 +1,8 @@
+import {
+  faCommentAlt,
+  faShareSquare,
+} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { FC } from "react";
 
@@ -5,7 +10,6 @@ import { fakeNewsPollLabelMap } from "../../constants";
 import { CurrentPost } from "../../entities/CurrentPost";
 import BarGraph from "../BarGraph";
 import Pill from "../Pill";
-import ResponsiveContainer from "../ResponsiveContainer";
 
 type Props = CurrentPost;
 
@@ -36,6 +40,16 @@ const CurrentPostsListItem: FC<Props> = ({
         data={dataFormatted}
         question="To what extent is this piece of news true?"
       />
+      <div className="space-x-2 mt-4 flex">
+        <div className="space-x-1 flex items-center">
+          <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
+          <div className="text-xs">{numComment} Comments</div>
+        </div>
+        <div className="space-x-1 flex items-center">
+          <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
+          <div className="text-xs">Share</div>
+        </div>
+      </div>
     </div>
   );
 };

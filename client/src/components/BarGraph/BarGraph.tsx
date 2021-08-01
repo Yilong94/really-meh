@@ -14,13 +14,13 @@ const BarColumn: FC<BarColumnProps> = ({ value, label }) => {
 
   return (
     <div className="flex items-center">
-      <div className="bg-white flex-grow">
-        <div style={style} className="bg-gray-400">
-          <span className="ml-2 text-xs">{label}</span>
+      <div className="h-5 bg-white flex-grow">
+        <div style={style} className="h-5 bg-gray-400 flex items-center">
+          <span className="absolute ml-2 text-xs">{label}</span>
         </div>
       </div>
 
-      <div className="text-xs">{`${roundedValue}%`}</div>
+      <div className="text-xs ml-2">{`${roundedValue}%`}</div>
     </div>
   );
 };
