@@ -16,10 +16,8 @@ const CurrentPostsSection: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [maxPage, setMaxPage] = useState(0);
   const [currentPosts, setCurrentPosts] = useState<CurrentPost[]>([]);
-
-  const handleQuerySuccess = (data: CurrentPost[]) => {
-    setCurrentPosts([...currentPosts, ...data]);
-  };
+  const ref = useRef<HTMLDivElement>(null);
+  const isEndOfPage = useOnScreen(ref);
 
   const { isFetching, refetch } = useQuery(
     ReactQueryKey.POSTS,
@@ -27,26 +25,23 @@ const CurrentPostsSection: FC = () => {
     {
       enabled: false,
       refetchOnWindowFocus: false,
-      onSuccess: handleQuerySuccess,
+      onSuccess: (data: CurrentPost[]) => {
+        setCurrentPosts([...currentPosts, ...data]);
+      },
     }
   );
 
-  const ref = useRef<HTMLDivElement>(null);
-  const isEndOfPage = useOnScreen(ref);
-
+  useEffect(() => {
+    refetch();
+  }, []);
+  useEffect(() => {
+    refetch();
+  }, [maxPage]);
   useEffect(() => {
     if (isEndOfPage && !isFetching) {
       setMaxPage(maxPage + 1);
     }
   }, [isEndOfPage, isFetching]);
-
-  useEffect(() => {
-    refetch();
-  }, [maxPage]);
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value);
@@ -66,7 +61,7 @@ const CurrentPostsSection: FC = () => {
       <CurrentPostsList currentPosts={currentPosts} />
 
       {isFetching ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
         </div>
       ) : (
