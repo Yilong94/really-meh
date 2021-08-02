@@ -6,8 +6,17 @@ export interface CurrentPost {
   tags: string[];
   content: string;
   poll: {
-    data: { [labe: string]: number };
+    data: { [label: string]: number };
     hasVoted: boolean;
   };
   numComment: number;
+  comments: {
+    commentId: string;
+    creator: string;
+    createdAt: string;
+    content: string;
+    upVote: number;
+    downVote: number;
+    selfVote: string | null;
+  }[];
 }

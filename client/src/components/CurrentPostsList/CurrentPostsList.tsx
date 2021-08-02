@@ -11,7 +11,11 @@ const CurrentPostsList: FC<Props> = ({ currentPosts }) => {
   return (
     <div>
       {currentPosts.map((currentPost, index) => {
-        return <CurrentPostsListItem key={index} {...currentPost} />;
+        return (
+          <div key={index} className="border-b border-gray-400 last:border-b-0">
+            <CurrentPostsListItem {...currentPost} />
+          </div>
+        );
       })}
     </div>
   );
