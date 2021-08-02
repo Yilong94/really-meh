@@ -8,8 +8,10 @@ import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { FC } from "react";
 import { useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
 
 import { ratePost } from "../../api";
+import { POST } from "../../app/routes";
 import {
   fakeNewsPollLabelMap,
   POLL_QUESTION,
@@ -45,6 +47,7 @@ const CurrentPostsListItem: FC<Props> = ({
   useEffect(() => {
     rating && setPollData({ data: rating, hasVoted: true });
   }, [rating]);
+  const history = useHistory();
 
   const createdAtFormatted = moment(createdAt).fromNow();
   const dataFormatted = useMemo(
@@ -73,15 +76,23 @@ const CurrentPostsListItem: FC<Props> = ({
     };
   }, [postId]);
 
+  const redirectToPost = () => {
+    history.push(POST + `/${postId}`);
+  };
+
   return (
     <div className="p-4 bg-white">
       <div className="text-xs">{`Posted by ${creator}`}</div>
       <div className="text-xs">{createdAtFormatted}</div>
-      <div className="text-base font-bold">{title}</div>
+      <div className="text-base font-bold" onClick={redirectToPost}>
+        {title}
+      </div>
       {tags.map((tag, index) => {
         return <Pill key={index} text={tag}></Pill>;
       })}
-      <div className="py-2 text-sm">{content}</div>
+      <div className="py-2 text-sm" onClick={redirectToPost}>
+        {content}
+      </div>
 
       {isRatePostLoading ? (
         <div className="flex justify-center">
@@ -98,19 +109,17 @@ const CurrentPostsListItem: FC<Props> = ({
       )}
 
       <div className="flex mt-4 space-x-2">
-        <div className="flex items-center space-x-1">
-          <button>
-            <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
-          </button>
+        <button
+          className="flex items-center space-x-1"
+          onClick={redirectToPost}
+        >
+          <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
           <div className="text-xs">{numComment} Comments</div>
-        </div>
-        <div className="flex items-center space-x-1">
-          <button>
-            <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
-          </button>
-
+        </button>
+        <button className="flex items-center space-x-1">
+          <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
           <div className="text-xs">Share</div>
-        </div>
+        </button>
       </div>
     </div>
   );

@@ -77,21 +77,25 @@ const CommentsListItem: FC<Props> = ({
         </div>
       ) : (
         <div className="flex mt-4 space-x-2">
-          <div className="flex items-center space-x-1">
-            <button id={CommentVote.UP_VOTE} onClick={handleVoteClick}>
-              <FontAwesomeIcon className={upVoteClass} icon={faCaretSquareUp} />
-            </button>
+          <button
+            className="flex items-center space-x-1"
+            id={CommentVote.UP_VOTE}
+            onClick={handleVoteClick}
+          >
+            <FontAwesomeIcon className={upVoteClass} icon={faCaretSquareUp} />
             <div className="text-xs">{voteData.upVote}</div>
-          </div>
-          <div className="flex items-center space-x-1">
-            <button id={CommentVote.DOWN_VOTE} onClick={handleVoteClick}>
-              <FontAwesomeIcon
-                className={downVoteClass}
-                icon={faCaretSquareDown}
-              />
-            </button>
-            <div className="text-xs">{voteData.downVote}</div>
-          </div>
+          </button>
+          <button
+            className="flex items-center space-x-1"
+            id={CommentVote.DOWN_VOTE}
+            onClick={handleVoteClick}
+          >
+            <FontAwesomeIcon
+              className={downVoteClass}
+              icon={faCaretSquareDown}
+            />
+          </button>
+          <div className="text-xs">{voteData.downVote}</div>
         </div>
       )}
     </div>
