@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from vote.models import PollVote, CommentVote
+
+admin.site.register(PollVote)
+admin.site.register(CommentVote)
+
