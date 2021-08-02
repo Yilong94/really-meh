@@ -8,7 +8,7 @@ import SinglePostPage from "../pages/SinglePostPage";
 
 const App: FC = () => {
   return (
-    <div className="h-full bg-gray-200">
+    <div className="flex flex-col h-full bg-gray-200">
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />

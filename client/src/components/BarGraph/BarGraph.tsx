@@ -16,7 +16,7 @@ const BarColumn: FC<BarColumnProps> = ({ value, label }) => {
     <div className="flex items-center">
       <div className="flex-grow h-5 bg-white">
         <div style={style} className="flex items-center h-5 bg-gray-400">
-          <span className="absolute ml-2 text-xs">{label}</span>
+          <span className="ml-2 text-xs">{label}</span>
         </div>
       </div>
 

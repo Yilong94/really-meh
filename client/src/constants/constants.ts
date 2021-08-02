@@ -7,6 +7,7 @@ export enum ReactQueryKey {
   POST = "POST",
   RATE_POST = "RATE_POST",
   COMMENT_POST = "COMMENT_POST",
+  POSTS = "POSTS",
 }
 
 export enum SortBy {
