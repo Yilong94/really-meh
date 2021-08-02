@@ -24,6 +24,18 @@ const currentPosts: CurrentPost[] = [
       hasVoted: true,
     },
     numComment: 123,
+    comments: [
+      {
+        commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+        creator: "Gary Lim",
+        createdAt: "2021-01-12T10:00:00",
+        content:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+        upVote: 213,
+        downVote: 23,
+        selfVote: "upVote",
+      },
+    ],
   },
   {
     postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
@@ -43,6 +55,18 @@ const currentPosts: CurrentPost[] = [
       hasVoted: true,
     },
     numComment: 123,
+    comments: [
+      {
+        commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+        creator: "Gary Lim",
+        createdAt: "2021-01-12T10:00:00",
+        content:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+        upVote: 213,
+        downVote: 23,
+        selfVote: "upVote",
+      },
+    ],
   },
   {
     postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
@@ -62,6 +86,18 @@ const currentPosts: CurrentPost[] = [
       hasVoted: false,
     },
     numComment: 123,
+    comments: [
+      {
+        commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+        creator: "Gary Lim",
+        createdAt: "2021-01-12T10:00:00",
+        content:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+        upVote: 213,
+        downVote: 23,
+        selfVote: "upVote",
+      },
+    ],
   },
 ];
 

@@ -1,17 +1,18 @@
+import axios from "axios";
+
 import { delay } from "../utils";
 import * as routes from "./routes";
 
 export const fetchOfficialStatements = async () => {
   try {
-    const res = await fetch(routes.OFFICIAL_STATEMENTS, {
-      method: "GET",
+    const res = await axios.get(routes.OFFICIAL_STATEMENTS, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
 
-    return await res.json();
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -19,19 +20,21 @@ export const fetchOfficialStatements = async () => {
 
 export const fetchRecentPosts = async (limit: number, offset: number) => {
   try {
-    const res = await fetch(routes.POSTS, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const res = await axios.post(
+      routes.POSTS,
+      {
         limit,
         offset,
-      }),
-    });
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    return await res.json();
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -39,18 +42,20 @@ export const fetchRecentPosts = async (limit: number, offset: number) => {
 
 export const fetchSimilarPosts = async (searchValue: string) => {
   try {
-    const res = await fetch(routes.POSTS, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const res = await axios.post(
+      routes.POSTS,
+      {
         search: searchValue,
-      }),
-    });
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    return await res.json();
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -58,8 +63,7 @@ export const fetchSimilarPosts = async (searchValue: string) => {
 
 export const fetchPost = async (postId: string) => {
   try {
-    // const res = await fetch(routes.post(postId), {
-    //   method: "GET",
+    // const res = await axios.get(routes.postRoute(postId), {
     //   headers: {
     //     Accept: "application/json",
     //     "Content-Type": "application/json",
@@ -67,7 +71,7 @@ export const fetchPost = async (postId: string) => {
     // });
 
     const res = {
-      json: () => ({
+      data: {
         postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
         creator: "Angelina Than Xiao Mei",
         createdAt: "2021-01-11T10:00:00",
@@ -85,10 +89,10 @@ export const fetchPost = async (postId: string) => {
           hasVoted: true,
         },
         numComment: 123,
-      }),
+      },
     };
 
-    return await res.json();
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -102,45 +106,66 @@ export const ratePost = async ({
   userId: string;
   postId: string;
   labelKey: string;
-}) => {
+}): Promise<{ rating: { [label: string]: number } }> => {
   try {
-    // const res = await fetch(routes.ratePosts(postId), {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
+    // const res = await axios.post(
+    //   routes.ratePost(postId),
+    //   {
     //     user: userId,
     //     label: labelKey,
-    //   }),
-    // });
+    //   },
+    //   {
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
 
     const res = {
-      json: () => ({
-        postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-        creator: "Angelina Than Xiao Mei",
-        createdAt: "2021-01-11T10:00:00",
-        title: "Poll title",
-        tags: ["COVID-19"],
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-        poll: {
-          data: {
-            true: 0.0,
-            "sw true": 0.3,
-            "sw false": 0.4,
-            false: 1.0,
-          },
-          hasVoted: true,
+      data: {
+        rating: {
+          true: 0.0,
+          "sw true": 0.3,
+          "sw false": 0.4,
+          false: 1.0,
         },
-        numComment: 123,
-      }),
+      },
     };
 
     await delay(3000);
 
-    return await res.json();
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const commentPost = async ({
+  userId,
+  postId,
+  comment,
+}: {
+  userId: string;
+  postId: string;
+  comment: string;
+}) => {
+  try {
+    const res = await axios.post(
+      routes.commentPostRoute(postId),
+      {
+        user: userId,
+        comment: comment,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
   } catch (err) {
     throw err;
   }

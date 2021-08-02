@@ -5,11 +5,11 @@ import {
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FC } from "react";
-import { MutationFunction, useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 
-import { fetchPost, ratePost } from "../../api";
+import { ratePost } from "../../api";
 import {
   fakeNewsPollLabelMap,
   POLL_QUESTION,
@@ -29,47 +29,38 @@ const CurrentPostsListItem: FC<Props> = ({
   title,
   tags,
   content,
-  poll: { data, hasVoted },
+  poll,
   numComment,
 }) => {
-  const { isLoading: isRatePostLoading, mutate } = useMutation(
-    ReactQueryKey.RATE_POSTS,
-    ratePost as MutationFunction,
-    {
-      onSuccess: () => {
-        refetch();
-      },
-    }
-  );
   const {
-    data: { poll: { data: newData = {} } = {} } = {},
-    isLoading: isFetchPostLoading,
-    status,
-    refetch,
-  } = useQuery(
-    [ReactQueryKey.POST, postId],
-    async () => {
-      return await fetchPost(postId);
-    },
-    {
-      enabled: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-  const isLoading = useMemo(() => {
-    return isRatePostLoading || isFetchPostLoading;
-  }, [isRatePostLoading, isFetchPostLoading]);
+    isLoading: isRatePostLoading,
+    mutate,
+    data: { rating } = {},
+  } = useMutation(ReactQueryKey.RATE_POST, ratePost);
+
+  const [pollData, setPollData] = useState(poll);
+  useEffect(() => {
+    setPollData(poll);
+  }, [poll]);
+  useEffect(() => {
+    rating && setPollData({ data: rating, hasVoted: true });
+  }, [rating]);
 
   const createdAtFormatted = moment(createdAt).fromNow();
-  const dataFormatted = Object.keys(data).reduce((acc, val) => {
-    return { ...acc, [fakeNewsPollLabelMap[val]]: data[val] };
-  }, {});
-  const labelFormatted = Object.keys(data).reduce((acc, val) => {
-    return { ...acc, [val]: fakeNewsPollLabelMap[val] };
-  }, {});
-  const newDataFormatted = Object.keys(newData).reduce((acc, val) => {
-    return { ...acc, [fakeNewsPollLabelMap[val]]: data[val] };
-  }, {});
+  const dataFormatted = useMemo(
+    () =>
+      Object.keys(pollData.data).reduce((acc, val) => {
+        return { ...acc, [fakeNewsPollLabelMap[val]]: pollData.data[val] };
+      }, {}),
+    [pollData.data]
+  );
+  const labelFormatted = useMemo(
+    () =>
+      Object.keys(pollData.data).reduce((acc, val) => {
+        return { ...acc, [val]: fakeNewsPollLabelMap[val] };
+      }, {}),
+    [pollData.data]
+  );
 
   const handlePollClick = useMemo(() => {
     return (key: string) => {
@@ -83,7 +74,7 @@ const CurrentPostsListItem: FC<Props> = ({
   }, [postId]);
 
   const renderVisual = useMemo(() => {
-    if (isLoading) {
+    if (isRatePostLoading) {
       return (
         <div className="flex justify-center">
           <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
@@ -91,26 +82,21 @@ const CurrentPostsListItem: FC<Props> = ({
       );
     }
 
-    switch (status) {
-      case "success":
-        return <BarGraph data={newDataFormatted} question={POLL_QUESTION} />;
-      case "idle":
-        if (hasVoted) {
-          return <BarGraph data={dataFormatted} question={POLL_QUESTION} />;
-        } else {
-          return (
-            <BarPoll
-              label={labelFormatted}
-              question={POLL_QUESTION}
-              onClick={handlePollClick}
-            />
-          );
-        }
+    if (pollData.hasVoted) {
+      return <BarGraph data={dataFormatted} question={POLL_QUESTION} />;
+    } else {
+      return (
+        <BarPoll
+          label={labelFormatted}
+          question={POLL_QUESTION}
+          onClick={handlePollClick}
+        />
+      );
     }
-  }, [isLoading, status]);
+  }, [isRatePostLoading, pollData]);
 
   return (
-    <div className="p-4 bg-white border-b border-gray-400 last:border-b-0">
+    <div className="p-4 bg-white">
       <div className="text-xs">{`Posted by ${creator}`}</div>
       <div className="text-xs">{createdAtFormatted}</div>
       <div className="text-base font-bold">{title}</div>
