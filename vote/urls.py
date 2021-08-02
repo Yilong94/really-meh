@@ -6,7 +6,7 @@ from vote import views
 app_name = 'vote'
 
 urlpatterns = [
-    path('votes/', views.AvailableThreads.as_view(), name='votes'),
+    path('votes/', views.UpVotePoll.as_view(), name='votes'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,8 +1,10 @@
-from django.shortcuts import render
-# from rest_framework import generics, mixins, status
-# from vote.models import votes
-# # Create your views here.
-# class UpdateThread(generics.UpdateAPIView):
-#     queryset = Thread.objects.all()
-#     serializer_class = UpdateThreadSerializer
-#     permission_classes = []
+from rest_framework import generics, mixins, status
+from vote.models import PollVote
+from vote.serializers import PollVoteSerializer
+
+
+class UpVotePoll(generics.CreateAPIView):
+    queryset = PollVote.objects.all()
+    serializer_class = PollVoteSerializer
+    permission_classes = []
+

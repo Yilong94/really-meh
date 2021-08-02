@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -13,18 +12,18 @@ class Migration(migrations.Migration):
         ('vote', '0001_initial'),
         ('poll', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('comment', '0001_initial'),
+        ('rating', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='poll',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='poll.poll'),
+            model_name='poll',
+            name='ratings',
+            field=models.ManyToManyField(related_name='user_rating', through='rating.Rating', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='comment',
+            model_name='poll',
             name='votes',
-            field=models.ManyToManyField(through='vote.CommentVote', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(related_name='user_votes', through='vote.PollVote', to=settings.AUTH_USER_MODEL),
         ),
     ]

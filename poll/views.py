@@ -4,17 +4,17 @@ from django.db.models import Q
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 
-from thread.models import Thread
-from thread.serializer import ThreadSerializer, CreateThreadSerializer, UpdateThreadSerializer
+from poll.models import Poll
+from poll.serializer import PollSerializer, CreatePollSerializer, UpdatePollSerializer
 
 
-class ThreadList(generics.ListAPIView):
-    queryset = Thread.objects.all()
-    serializer_class = ThreadSerializer
+class PollList(generics.ListAPIView):
+    queryset = Poll.objects.all()
+    serializer_class = PollSerializer
     permission_classes = []
 
 
-class AvailableThreads(ThreadList):
+class AvailablePolls(PollList):
     def get_queryset(self):
         available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
 
@@ -25,20 +25,20 @@ class AvailableThreads(ThreadList):
         return self.queryset.filter(available_cond)
 
 
-class CreateThread(generics.CreateAPIView):
-    serializer_class = CreateThreadSerializer
+class CreatePoll(generics.CreateAPIView):
+    serializer_class = CreatePollSerializer
     permission_classes = []
 
 
-class UpdateThread(generics.UpdateAPIView):
-    queryset = Thread.objects.all()
-    serializer_class = UpdateThreadSerializer
+class UpdatePoll(generics.UpdateAPIView):
+    queryset = Poll.objects.all()
+    serializer_class = UpdatePollSerializer
     permission_classes = []
 
 
-class DeleteThread(generics.DestroyAPIView):
-    queryset = Thread.objects.all()
-    serializer_class = UpdateThreadSerializer
+class DeletePoll(generics.DestroyAPIView):
+    queryset = Poll.objects.all()
+    serializer_class = UpdatePollSerializer
     permission_classes = []
 
     def delete(self, request, *args, **kwargs):
