@@ -73,28 +73,6 @@ const CurrentPostsListItem: FC<Props> = ({
     };
   }, [postId]);
 
-  const renderVisual = useMemo(() => {
-    if (isRatePostLoading) {
-      return (
-        <div className="flex justify-center">
-          <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
-        </div>
-      );
-    }
-
-    if (pollData.hasVoted) {
-      return <BarGraph data={dataFormatted} question={POLL_QUESTION} />;
-    } else {
-      return (
-        <BarPoll
-          label={labelFormatted}
-          question={POLL_QUESTION}
-          onClick={handlePollClick}
-        />
-      );
-    }
-  }, [isRatePostLoading, pollData]);
-
   return (
     <div className="p-4 bg-white">
       <div className="text-xs">{`Posted by ${creator}`}</div>
@@ -105,15 +83,32 @@ const CurrentPostsListItem: FC<Props> = ({
       })}
       <div className="py-2 text-sm">{content}</div>
 
-      {renderVisual}
+      {isRatePostLoading ? (
+        <div className="flex justify-center">
+          <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
+        </div>
+      ) : pollData.hasVoted ? (
+        <BarGraph data={dataFormatted} question={POLL_QUESTION} />
+      ) : (
+        <BarPoll
+          label={labelFormatted}
+          question={POLL_QUESTION}
+          onClick={handlePollClick}
+        />
+      )}
 
       <div className="flex mt-4 space-x-2">
         <div className="flex items-center space-x-1">
-          <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
+          <button>
+            <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
+          </button>
           <div className="text-xs">{numComment} Comments</div>
         </div>
         <div className="flex items-center space-x-1">
-          <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
+          <button>
+            <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />
+          </button>
+
           <div className="text-xs">Share</div>
         </div>
       </div>

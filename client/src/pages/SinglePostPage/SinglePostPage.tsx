@@ -6,10 +6,10 @@ import SinglePostSection from "../../components/SinglePostSection";
 
 const SinglePostPage: FC = () => {
   return (
-    <>
+    <div className="flex flex-col flex-auto min-h-0 overflow-y-auto">
       <BreadCrumb crumbs={[routes.HOME, routes.POST]} />
       <SinglePostSection />
-    </>
+    </div>
   );
 };
 

@@ -1,67 +1,70 @@
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FC } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 
+import { fetchComments, fetchPost } from "../../api";
+import { ReactQueryKey } from "../../constants";
+import { Comment } from "../../entities/Comment";
 import { CurrentPost } from "../../entities/CurrentPost";
+import { useOnScreen } from "../../utils/hooks";
 import CommentsList from "../CommentsList";
 import CurrentPostsListItem from "../CurrentPostsListItem";
 import ResponsiveContainer from "../ResponsiveContainer";
 
-const singlePost: CurrentPost = {
-  postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-  creator: "Angelina Than Xiao Mei",
-  createdAt: "2021-01-11T10:00:00",
-  title: "Poll title",
-  tags: ["COVID-19"],
-  content:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-  poll: {
-    data: {
-      true: 0.0,
-      "sw true": 0.3,
-      "sw false": 0.4,
-      false: 1.0,
-    },
-    hasVoted: true,
-  },
-  numComment: 123,
-  comments: [
-    {
-      commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-      creator: "Gary Lim",
-      createdAt: "2021-01-12T10:00:00",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-      upVote: 213,
-      downVote: 23,
-      selfVote: "upVote",
-    },
-    {
-      commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-      creator: "Gary Lim",
-      createdAt: "2021-01-12T10:00:00",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-      upVote: 213,
-      downVote: 23,
-      selfVote: "upVote",
-    },
-    {
-      commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-      creator: "Gary Lim",
-      createdAt: "2021-01-12T10:00:00",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-      upVote: 213,
-      downVote: 23,
-      selfVote: "upVote",
-    },
-  ],
-};
-
 const SinglePostSection: FC = () => {
+  const { id: postId } = useParams<{ id: string }>();
+  const [maxPage, setMaxPage] = useState(0);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
+  const isEndOfPage = useOnScreen(ref);
+
+  const { isLoading: isFetchPostLoading, data: singlePost } = useQuery(
+    ReactQueryKey.POST,
+    async () => await fetchPost(postId)
+  );
+  const { isFetching: isFetchCommentsLoading, refetch } = useQuery(
+    ReactQueryKey.COMMENTS,
+    async () => await fetchComments(postId, maxPage),
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      onSuccess: (data: Comment[]) => {
+        setComments([...comments, ...data]);
+      },
+    }
+  );
+  const isLoading = useMemo(() => {
+    return isFetchPostLoading || isFetchCommentsLoading;
+  }, [isFetchPostLoading, isFetchCommentsLoading]);
+
+  useEffect(() => {
+    refetch();
+  }, []);
+  useEffect(() => {
+    refetch();
+  }, [maxPage]);
+  useEffect(() => {
+    if (isEndOfPage && !isFetchCommentsLoading) {
+      setMaxPage(maxPage + 1);
+    }
+  }, [isEndOfPage, isFetchCommentsLoading]);
+
   return (
     <ResponsiveContainer>
-      <CurrentPostsListItem {...singlePost} />
-      <CommentsList comments={singlePost.comments} />
+      {isLoading ? (
+        <div className="flex justify-center bg-white py-36">
+          <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
+        </div>
+      ) : (
+        <>
+          <CurrentPostsListItem {...(singlePost as CurrentPost)} />
+          <CommentsList comments={comments} />
+        </>
+      )}
     </ResponsiveContainer>
   );
 };
