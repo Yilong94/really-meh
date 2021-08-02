@@ -13,7 +13,7 @@ class ExtendedUser(AbstractUser):
     name = models.TextField(_('name'))
     userLevel = models.IntegerField(default=0)
 
-    objects = ExtendedUserManager
+    objects = ExtendedUserManager()
 
     def __str__(self):
         return self.email

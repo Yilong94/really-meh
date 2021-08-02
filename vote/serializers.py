@@ -8,3 +8,8 @@ class ThreadVoteSerializer(serializers.ModelSerializer):
         model = ThreadVote
         fields = "__all__"
 
+
+class CommentVoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ThreadVote
+        fields = "__all__"
