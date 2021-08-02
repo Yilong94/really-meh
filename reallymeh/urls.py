@@ -18,6 +18,7 @@ from django.urls import include, path
 
 api_urls = [
     path('poll/', include('poll.urls', namespace='poll'), name='poll'),
+    path('vote/', include('vote.urls', namespace='vote'), name='vote'),
 ]
 
 urlpatterns = [
