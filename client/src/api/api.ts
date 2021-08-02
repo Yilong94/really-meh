@@ -1,12 +1,13 @@
 import axios from "axios";
 
+import { Comment, CommentVote } from "../entities/Comment";
 import { CurrentPost } from "../entities/CurrentPost";
 import { delay } from "../utils";
 import * as routes from "./routes";
 
 export const fetchOfficialStatements = async () => {
   try {
-    const res = await axios.get(routes.OFFICIAL_STATEMENTS, {
+    const res = await axios.get(routes.officialStatementsRoute, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -22,7 +23,7 @@ export const fetchOfficialStatements = async () => {
 // export const fetchRecentPosts = async (limit: number, offset: number) => {
 //   try {
 //     const res = await axios.post(
-//       routes.POSTS,
+//       routes.postsRoute,
 //       {
 //         limit,
 //         offset,
@@ -44,7 +45,7 @@ export const fetchOfficialStatements = async () => {
 // export const fetchSimilarPosts = async (searchValue: string) => {
 //   try {
 //     const res = await axios.post(
-//       routes.POSTS,
+//       routes.postsRoute,
 //       {
 //         search: searchValue,
 //       },
@@ -71,11 +72,10 @@ export const fetchPosts = async (
   try {
     // const params = new URLSearchParams({
     //   ...(search && { search }),
-    //   ...(limit && { limit }),
-    //   ...(offset && { offset }),
+    //   ...(page && { page: `${page}` }),
     // });
 
-    // const res = await axios.get(`${routes.POSTS}?${params.toString()}`, {
+    // const res = await axios.get(`${routes.postsRoute}?${params.toString()}`, {
     //   headers: {
     //     Accept: "application/json",
     //     "Content-Type": "application/json",
@@ -189,7 +189,7 @@ export const fetchPosts = async (
   }
 };
 
-export const fetchPost = async (postId: string) => {
+export const fetchPost = async (postId: string): Promise<CurrentPost> => {
   try {
     // const res = await axios.get(routes.postRoute(postId), {
     //   headers: {
@@ -218,8 +218,104 @@ export const fetchPost = async (postId: string) => {
           hasVoted: true,
         },
         numComment: 123,
+        comments: [
+          {
+            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+            creator: "Gary Lim",
+            createdAt: "2021-01-12T10:00:00",
+            content:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+            upVote: 213,
+            downVote: 23,
+            selfVote: "upVote",
+          },
+          {
+            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+            creator: "Gary Lim",
+            createdAt: "2021-01-12T10:00:00",
+            content:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+            upVote: 213,
+            downVote: 23,
+            selfVote: "upVote",
+          },
+          {
+            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+            creator: "Gary Lim",
+            createdAt: "2021-01-12T10:00:00",
+            content:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+            upVote: 213,
+            downVote: 23,
+            selfVote: "upVote",
+          },
+        ],
       },
     };
+
+    await delay(3000);
+
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const fetchComments = async (
+  postId: string,
+  page?: number
+): Promise<Comment[]> => {
+  try {
+    // const params = new URLSearchParams({
+    //   ...(page && { page: `${page}` }),
+    // });
+
+    // const res = await axios.get(
+    //   `${routes.commentsRoute(postId)}?${params.toString()}`,
+    //   {
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+
+    const res = {
+      data: [
+        {
+          commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+          creator: "Gary Lim",
+          createdAt: "2021-01-12T10:00:00",
+          content:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+          upVote: 213,
+          downVote: 23,
+          selfVote: CommentVote.UP_VOTE,
+        },
+        {
+          commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+          creator: "Gary Lim",
+          createdAt: "2021-01-12T10:00:00",
+          content:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+          upVote: 213,
+          downVote: 23,
+          selfVote: CommentVote.DOWN_VOTE,
+        },
+        {
+          commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
+          creator: "Gary Lim",
+          createdAt: "2021-01-12T10:00:00",
+          content:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
+          upVote: 213,
+          downVote: 23,
+          selfVote: CommentVote.UP_VOTE,
+        },
+      ],
+    };
+
+    await delay(3000);
 
     return res.data;
   } catch (err) {
@@ -282,7 +378,7 @@ export const commentPost = async ({
 }) => {
   try {
     const res = await axios.post(
-      routes.commentPostRoute(postId),
+      routes.commentsRoute(postId),
       {
         user: userId,
         comment: comment,
@@ -294,6 +390,48 @@ export const commentPost = async ({
         },
       }
     );
+
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const voteComment = async ({
+  userId,
+  postId,
+  commentId,
+  vote,
+}: {
+  userId: string;
+  postId: string;
+  commentId: string;
+  vote: CommentVote;
+}): Promise<{ upVote: number; downVote: number; selfVote: CommentVote }> => {
+  try {
+    // const res = await axios.post(
+    //   routes.voteCommentRoute(postId, commentId),
+    //   {
+    //     user: userId,
+    //     vote: vote,
+    //   },
+    //   {
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+
+    const res = {
+      data: {
+        upVote: 213,
+        downVote: 24,
+        selfVote: CommentVote.DOWN_VOTE,
+      },
+    };
+
+    await delay(3000);
 
     return res.data;
   } catch (err) {

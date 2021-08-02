@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useState } from "react";
 
 import { SortBy } from "../../constants";
-import { CurrentPost } from "../../entities/CurrentPost";
+import { Comment } from "../../entities/Comment";
+import CommentsListItem from "../CommentsListItem";
 
 interface Props {
-  comments: CurrentPost["comments"];
+  comments: Comment[];
 }
 
 const CommentsList: FC<Props> = ({ comments }) => {
@@ -37,7 +38,11 @@ const CommentsList: FC<Props> = ({ comments }) => {
           Add a comment
         </button>
       </div>
-      <div>{/* insert comments here */}</div>
+      <div className="bg-white">
+        {comments.map((comment, index) => {
+          return <CommentsListItem key={index} {...comment} />;
+        })}
+      </div>
     </div>
   );
 };
