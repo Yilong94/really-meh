@@ -40,6 +40,7 @@ class AvailablePolls(generics.ListAPIView):
 
 
 class CreatePoll(generics.CreateAPIView):
+    queryset = Poll.objects.all()
     serializer_class = CreatePollSerializer
     permission_classes = []
 
