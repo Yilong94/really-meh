@@ -1,12 +1,12 @@
 from django.db import models
 
-from thread.models import Thread
+from poll.models import Poll
 from extended_user.models import ExtendedUser
 
 
 class Comment(models.Model):
     content = models.TextField()
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     editedAt = models.DateTimeField(default=None, null=True)
     publishedAt = models.DateTimeField(default=None, null=True)
 

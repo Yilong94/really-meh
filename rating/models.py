@@ -1,7 +1,7 @@
 from django.db import models
 # from django.utils.translation import gettext_lazy as _
 
-from thread.models import Thread
+from poll.models import Poll
 from extended_user.models import ExtendedUser
 
 
@@ -18,6 +18,6 @@ class Rating(models.Model):
     ]
 
     user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     rating = models.CharField(null=True, choices=RATING_CHOICES, max_length=6)
 

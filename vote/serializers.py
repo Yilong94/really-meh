@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from vote.models import ThreadVote
+from vote.models import PollVote, CommentVote, Vote
 
 
-class ThreadVoteSerializer(serializers.ModelSerializer):
+class PollVoteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ThreadVote
+        model = PollVote
         fields = "__all__"
 
 
 class CommentVoteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ThreadVote
+        model = CommentVote
         fields = "__all__"

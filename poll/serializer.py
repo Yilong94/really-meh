@@ -1,26 +1,26 @@
 from rest_framework import serializers
 
 from extended_user.serializers import ExtendedUserSerializer
-from thread.models import Thread
+from poll.models import Poll
 
 
-class ThreadSerializer(serializers.ModelSerializer):
+class PollSerializer(serializers.ModelSerializer):
     ratings = ExtendedUserSerializer(many=True)
     votes = ExtendedUserSerializer(many=True)
 
     class Meta:
-        model = Thread
+        model = Poll
         fields = "__all__"
 
 
-class CreateThreadSerializer(ThreadSerializer):
+class CreatePollSerializer(PollSerializer):
     class Meta:
-        model = Thread
+        model = Poll
         fields = ['content', 'creatorUser']
 
 
-class UpdateThreadSerializer(ThreadSerializer):
+class UpdatePollSerializer(PollSerializer):
     class Meta:
-        model = Thread
+        model = Poll
         fields = ['content', 'archivedAt', 'publishedAt', 'editedAt']
 

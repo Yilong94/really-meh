@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from extended_user.models import ExtendedUser
+
+admin.site.register(ExtendedUser)
