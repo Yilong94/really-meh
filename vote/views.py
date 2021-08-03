@@ -1,9 +1,10 @@
 import copy
 
-from rest_framework import generics, mixins, status
+from rest_framework import generics, status
 from rest_framework.response import Response
 
-from vote.models import PollVote, CommentVote, Vote
+from vote.choices import UP, DOWN
+from vote.models import PollVote, CommentVote
 from vote.serializers import PollVoteSerializer, CommentVoteSerializer
 
 
@@ -29,8 +30,8 @@ class BaseVote(generics.GenericAPIView):
 
         instance = self.create_or_update(create_or_update_data, existing_vote)
 
-        number_of_upvotes = self.queryset.filter(id=instance.id, direction=Vote.UP).count()
-        number_of_downvotes = self.queryset.filter(id=instance.id, direction=Vote.DOWN).count()
+        number_of_upvotes = self.queryset.filter(id=instance.id, direction=UP).count()
+        number_of_downvotes = self.queryset.filter(id=instance.id, direction=DOWN).count()
 
         data = {
             "number_of_upvotes": number_of_upvotes,
