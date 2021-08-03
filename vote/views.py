@@ -1,8 +1,11 @@
 import copy
 
+from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.response import Response
 
+from comment.models import Comment
+from poll.models import Poll
 from vote.choices import UP, DOWN
 from vote.models import PollVote, CommentVote
 from vote.serializers import PollVoteSerializer, CommentVoteSerializer
@@ -13,6 +16,9 @@ class BaseVote(generics.GenericAPIView):
 
     def get_existing_vote(self, request):
         raise NotImplementedError("get_exisiting_vote is not implemented")
+
+    def get_related_cond(self, request):
+        raise NotImplementedError("get_related_cond is not implemented")
 
     def create_or_update(self, data, instance=None):
         serializer = self.get_serializer(data=data, instance=instance)
@@ -28,10 +34,12 @@ class BaseVote(generics.GenericAPIView):
         if existing_vote and direction == existing_vote.direction:
             create_or_update_data['direction'] = None
 
-        instance = self.create_or_update(create_or_update_data, existing_vote)
+        self.create_or_update(create_or_update_data, existing_vote)
 
-        number_of_upvotes = self.queryset.filter(id=instance.id, direction=UP).count()
-        number_of_downvotes = self.queryset.filter(id=instance.id, direction=DOWN).count()
+        vote_relation_cond = self.get_related_cond(request)
+
+        number_of_upvotes = self.queryset.filter(vote_relation_cond, direction=UP).count()
+        number_of_downvotes = self.queryset.filter(vote_relation_cond, direction=DOWN).count()
 
         data = {
             "number_of_upvotes": number_of_upvotes,
@@ -50,6 +58,10 @@ class PollVoteView(BaseVote):
         poll = request.data.get('poll')
         return self.queryset.filter(poll=poll, user=user).first()
 
+    def get_related_cond(self, request):
+        poll = request.data.get('poll')
+        return Q(poll=poll)
+
 
 class CommentVoteView(BaseVote):
     serializer_class = CommentVoteSerializer
@@ -59,3 +71,7 @@ class CommentVoteView(BaseVote):
         user = request.data.get('user')
         comment = request.data.get('comment')
         return self.queryset.filter(comment=comment, user=user).first()
+
+    def get_related_cond(self, request):
+        comment = request.data.get('comment')
+        return Q(comment=comment)

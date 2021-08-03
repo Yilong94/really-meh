@@ -12,7 +12,7 @@ from vote import views
 from vote.models import PollVote, CommentVote
 
 
-class PollVoteTestCase(TestCase):
+class VoteTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user_test = ExtendedUser(username='some user', email='email@email.com')
@@ -38,12 +38,14 @@ class PollVoteTestCase(TestCase):
         return response
 
 
-class VotePollTestCase(PollVoteTestCase):
+class VotePollTestCase(VoteTestCase):
     def setUp(self):
         self.view = views.PollVoteView.as_view()
 
         self.user_test2 = ExtendedUser.objects.create(username='some user again', email='email1@email.com')
         self.availablePoll = Poll.objects.create(title='123', content='1234', publishedAt=datetime.datetime.now())
+
+        PollVote.objects.create(user=self.user_test, poll=self.availablePoll, direction='UP')
 
         self.create_data = {
             "user": self.user_test2.pk,
@@ -56,7 +58,7 @@ class VotePollTestCase(PollVoteTestCase):
                                        format='json')
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 1}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 2}})
 
         votes_count = PollVote.objects.filter(user=self.user_test2, poll=self.availablePoll, direction='UP').count()
         self.assertEqual(votes_count, 1)
@@ -69,7 +71,7 @@ class VotePollTestCase(PollVoteTestCase):
                                        format='json')
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 1, 'number_of_upvotes': 0}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 1, 'number_of_upvotes': 1}})
 
         votes_count = PollVote.objects.filter(user=self.user_test2, poll=self.availablePoll, direction='DWN').count()
         self.assertEqual(votes_count, 1)
@@ -79,17 +81,16 @@ class VotePollTestCase(PollVoteTestCase):
 
         request = self.get_api_request('vote:vote_poll', self.create_data, self.user_test, self.factory.post,
                                        format='json')
-        print(request)
 
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 0}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 1}})
 
         votes_count = PollVote.objects.filter(user=self.user_test2, poll=self.availablePoll, direction=None).count()
         self.assertEqual(votes_count, 1)
 
 
-class VoteCommentTestCase(PollVoteTestCase):
+class VoteCommentTestCase(VoteTestCase):
     def setUp(self):
         self.view = views.CommentVoteView.as_view()
 
@@ -97,6 +98,8 @@ class VoteCommentTestCase(PollVoteTestCase):
         self.availablePoll = Poll.objects.create(title='123', content='1234', publishedAt=datetime.datetime.now())
         self.availableComment = Comment.objects.create(content='123445', poll=self.availablePoll,
                                                        publishedAt=datetime.datetime.now())
+
+        CommentVote.objects.create(user=self.user_test, comment=self.availableComment, direction='UP')
 
         self.create_data = {
             "user": self.user_test2.pk,
@@ -109,7 +112,7 @@ class VoteCommentTestCase(PollVoteTestCase):
                                        format='json')
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 1}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 2}})
 
         votes_count = CommentVote.objects.filter(user=self.user_test2, comment=self.availableComment,
                                                  direction='UP').count()
@@ -123,7 +126,7 @@ class VoteCommentTestCase(PollVoteTestCase):
                                        format='json')
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 1, 'number_of_upvotes': 0}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 1, 'number_of_upvotes': 1}})
 
         votes_count = CommentVote.objects.filter(user=self.user_test2, comment=self.availableComment,
                                                  direction='DWN').count()
@@ -137,7 +140,7 @@ class VoteCommentTestCase(PollVoteTestCase):
 
         result = self.view(request)
 
-        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 0}})
+        self.assertDictEqual(result.data, {'data': {'number_of_downvotes': 0, 'number_of_upvotes': 1}})
 
         votes_count = CommentVote.objects.filter(user=self.user_test2, comment=self.availableComment,
                                                  direction=None).count()
