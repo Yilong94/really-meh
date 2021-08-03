@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, BooleanField
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 
@@ -15,14 +15,28 @@ class AvailablePolls(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
     permission_classes = []
 
-    def get_queryset(self):
-        available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
+    user_id = None
 
+    def get_serializer(self, *args, **kwargs):
+        return super().get_serializer(*args, **kwargs, context={'user_id': self.user_id})
+
+    def get_queryset(self):
         search_string = self.request.query_params.get('search-string')
+
+        available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
         if search_string:
-            return self.queryset.filter(available_cond, content__contains=search_string)
+            available_cond &= Q(content__contains=search_string)
 
         return self.queryset.filter(available_cond)
+
+    def list(self, request, *args, **kwargs):
+        user_id = self.request.query_params.get('user-id')
+        if not user_id:
+            return Response(data={"message": "user-id not supplied"}, status=status.HTTP_400_BAD_REQUEST)
+
+        self.user_id = user_id
+
+        return super().list(request, *args, **kwargs)
 
 
 class CreatePoll(generics.CreateAPIView):

@@ -16,11 +16,17 @@ class PollSerializer(serializers.ModelSerializer):
 class AvailablePollSerializer(serializers.ModelSerializer):
     user_ratings = serializers.ReadOnlyField(read_only=True)
     number_of_user_comments = serializers.ReadOnlyField(read_only=True)
+    user_has_rated = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Poll
         fields = ['title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'user_ratings',
-                  'number_of_user_comments']
+                  'number_of_user_comments', 'user_has_rated']
+
+    def get_user_has_rated(self, obj):
+        user_id = self.context.get("user_id")
+
+        return obj.ratings.filter(id=user_id).exists()
 
 
 class CreatePollSerializer(PollSerializer):
