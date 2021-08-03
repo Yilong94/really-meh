@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from extended_user.serializers import ExtendedUserSerializer
 from poll.models import Poll
+from rating.models import Rating
 
 
 class PollSerializer(serializers.ModelSerializer):
@@ -26,7 +27,16 @@ class AvailablePollSerializer(serializers.ModelSerializer):
     def get_user_has_rated(self, obj):
         user_id = self.context.get("user_id")
 
-        return obj.ratings.filter(id=user_id).exists()
+        rating = None
+
+        poll_rating = Rating.objects.filter(poll=obj, user_id=user_id).first()
+        if poll_rating:
+            rating = poll_rating.rating
+
+        return {
+            "poll_id": obj.id,
+            "rating": rating
+        }
 
 
 class CreatePollSerializer(PollSerializer):
