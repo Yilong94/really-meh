@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import serializers
 
 from extended_user.serializers import ExtendedUserSerializer
@@ -15,14 +17,14 @@ class PollSerializer(serializers.ModelSerializer):
 
 
 class AvailablePollSerializer(serializers.ModelSerializer):
-    user_ratings = serializers.ReadOnlyField(read_only=True)
-    number_of_user_comments = serializers.ReadOnlyField(read_only=True)
-    user_has_rated = serializers.SerializerMethodField(read_only=True)
+    userRatings = serializers.ReadOnlyField(read_only=True, source='user_ratings')
+    numberOfUserComments = serializers.ReadOnlyField(read_only=True, source='number_of_user_comments')
+    userHasRated = serializers.SerializerMethodField(read_only=True, method_name='get_user_has_rated')
 
     class Meta:
         model = Poll
-        fields = ['id', 'title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'user_ratings',
-                  'number_of_user_comments', 'user_has_rated']
+        fields = ['id', 'title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'userRatings',
+                  'numberOfUserComments', 'userHasRated']
 
     def get_user_has_rated(self, obj):
         user_id = self.context.get("user_id")
@@ -39,7 +41,13 @@ class AvailablePollSerializer(serializers.ModelSerializer):
 class CreatePollSerializer(PollSerializer):
     class Meta:
         model = Poll
-        fields = ['title', 'content', 'creatorUser']
+        fields = ['title', 'content', 'creatorUser', 'publishedAt']
+
+    def create(self, validated_data):
+        published_at = validated_data.get('publishedAt') if validated_data.get('publishedAt') else datetime.datetime.now()
+
+        validated_data['publishedAt'] = published_at
+        return super().create(validated_data)
 
 
 class UpdatePollSerializer(PollSerializer):
