@@ -9,6 +9,7 @@ import { ReactQueryKey, SortBy } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import CommentsListItem from "../CommentsListItem";
 import { BottomSheet } from "./components/BottomSheet";
+
 interface Props {
   comments: Comment[];
 }
