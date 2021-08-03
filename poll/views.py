@@ -6,13 +6,13 @@ from rest_framework.response import Response
 
 from poll.models import Poll
 from poll.serializer import CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer
-from utils.pagination import StandardResultsSetPagination
+from utils.pagination import SmallResultsSetPagination
 
 
 class AvailablePolls(generics.ListAPIView):
     queryset = Poll.objects.all()
     serializer_class = AvailablePollSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = SmallResultsSetPagination
     permission_classes = []
 
     user_id = None

@@ -7,7 +7,7 @@ from comment.models import Comment
 class Poll(models.Model):
     title = models.TextField()
     content = models.TextField()
-    tags = models.TextField(default="{}")
+    tags = models.TextField(default="[]")
     creatorUser = models.ForeignKey('extended_user.ExtendedUser', on_delete=models.SET_NULL, null=True)
     archivedAt = models.DateTimeField(default=None, null=True, blank=True)
     publishedAt = models.DateTimeField(default=None, null=True, blank=True)
