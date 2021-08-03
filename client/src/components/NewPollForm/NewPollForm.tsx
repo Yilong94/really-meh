@@ -3,13 +3,14 @@ import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { faImage, faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Multiselect from "multiselect-react-dropdown";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import {
   categoriesKeyValueMap,
   fakeNewsPollLabelMap,
   POLL_QUESTION,
 } from "../../constants";
+import { PollForm } from "../../entities/PollForm";
 import { YELLOW } from "../../styles/constants";
 import BarPoll from "../BarPoll";
 import FormInput from "../FormInput";
@@ -17,10 +18,26 @@ import FormLabel from "../FormLabel";
 import ResponsiveContainer from "../ResponsiveContainer";
 
 const NewPollForm: FC = () => {
+  const [pollForm, setPollForm] = useState<PollForm>({
+    title: "",
+    content: "",
+    tags: [],
+  });
+
   const optionsFormatted = Object.keys(categoriesKeyValueMap).map((key) => ({
     id: key,
     name: categoriesKeyValueMap[key],
   }));
+
+  const handleFormChange = ({
+    id,
+    value,
+  }: {
+    id: keyof PollForm;
+    value: PollForm[keyof PollForm];
+  }) => {
+    setPollForm({ ...pollForm, [id]: value });
+  };
 
   return (
     <ResponsiveContainer className="flex flex-col flex-grow p-4 bg-white">
@@ -29,13 +46,26 @@ const NewPollForm: FC = () => {
       <div className="space-y-2">
         <div className="flex flex-col">
           <FormLabel>What is the title of your post?</FormLabel>
-          <FormInput placeholder="Title" type="text" />
+          <FormInput
+            id="title"
+            onChange={(e) => {
+              const target = e.target as HTMLInputElement;
+              const id = target.id as keyof PollForm;
+              const value = target.value;
+
+              handleFormChange({ id, value });
+            }}
+            placeholder="Title"
+            type="text"
+          />
         </div>
         <div className="flex flex-col">
           <FormLabel>What categories does your news fall under?</FormLabel>
           <FormInput
             Component={
               <Multiselect
+                id="tags"
+                selectedValues={pollForm.tags}
                 options={optionsFormatted}
                 displayValue="name"
                 placeholder="Choose an option"
@@ -50,6 +80,12 @@ const NewPollForm: FC = () => {
                 customCloseIcon={
                   <FontAwesomeIcon className="ml-2" icon={faTimesCircle} />
                 }
+                onSelect={(selectedList) => {
+                  handleFormChange({ id: "tags", value: selectedList });
+                }}
+                onRemove={(selectedList) => {
+                  handleFormChange({ id: "tags", value: selectedList });
+                }}
               />
             }
           />
@@ -63,8 +99,16 @@ const NewPollForm: FC = () => {
               <>
                 <div className="flex flex-col px-4 py-2">
                   <textarea
+                    id="content"
                     className="min-h-24"
                     placeholder="Copy paste the information you saw / received here"
+                    onChange={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      const id = target.id as keyof PollForm;
+                      const value = target.value;
+
+                      handleFormChange({ id, value });
+                    }}
                   />
                   <div className="opacity-30">
                     <BarPoll
