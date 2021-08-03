@@ -13,14 +13,24 @@ class PollSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class AvailablePollSerializer(serializers.ModelSerializer):
+    user_ratings = serializers.ReadOnlyField(read_only=True)
+    number_of_user_comments = serializers.ReadOnlyField(read_only=True)
+
+    class Meta:
+        model = Poll
+        fields = ['title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'user_ratings',
+                  'number_of_user_comments']
+
+
 class CreatePollSerializer(PollSerializer):
     class Meta:
         model = Poll
-        fields = ['content', 'creatorUser']
+        fields = ['title', 'content', 'creatorUser']
 
 
 class UpdatePollSerializer(PollSerializer):
     class Meta:
         model = Poll
-        fields = ['content', 'archivedAt', 'publishedAt', 'editedAt']
+        fields = ['title', 'content', 'archivedAt', 'publishedAt', 'editedAt']
 

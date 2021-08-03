@@ -1,8 +1,6 @@
 from django.db import models
 
-from comment.models import Comment
-from poll.models import Poll
-from extended_user.models import ExtendedUser
+from vote.choices import VOTE_CHOICES
 
 
 class VoteManager(models.Manager):
@@ -10,14 +8,7 @@ class VoteManager(models.Manager):
 
 
 class Vote(models.Model):
-    UP = 'UP'
-    DOWN = 'DWN'
-    VOTE_CHOICES = [
-        (UP, 'Up'),
-        (DOWN, 'Down'),
-    ]
-
-    user = models.ForeignKey(ExtendedUser, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey('extended_user.ExtendedUser', on_delete=models.SET_NULL, null=True)
     direction = models.CharField(null=True, choices=VOTE_CHOICES, max_length=6)
 
     objects = VoteManager
@@ -27,7 +18,7 @@ class Vote(models.Model):
 
 
 class CommentVote(Vote):
-    comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True)
+    comment = models.ForeignKey('comment.Comment', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         constraints = [
@@ -36,7 +27,7 @@ class CommentVote(Vote):
 
 
 class PollVote(Vote):
-    poll = models.ForeignKey(Poll, on_delete=models.SET_NULL, null=True)
+    poll = models.ForeignKey('poll.Poll', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         constraints = [

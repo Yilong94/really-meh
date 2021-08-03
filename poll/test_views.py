@@ -13,7 +13,7 @@ from extended_user.models import ExtendedUser
 from rating.models import Rating
 from poll import views
 from poll.models import Poll
-from poll.serializer import PollSerializer, CreatePollSerializer, UpdatePollSerializer
+from poll.serializer import PollSerializer, CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer
 from vote.models import PollVote
 
 
@@ -54,11 +54,12 @@ class AvailablePollTestCase(PollTestCase):
 
         response = self.view(request)
 
-        serializer = PollSerializer(self.availablePoll)
+        serializer = AvailablePollSerializer(self.availablePoll)
         expected_data = serializer.data
 
-        self.assertEqual(len(response.data), 1)
-        self.assertDictEqual(expected_data, response.data[0])
+        dict_response_data = dict(response.data)
+        self.assertEqual(len(dict_response_data['results']), 1)
+        self.assertDictEqual(expected_data, dict_response_data['results'][0])
 
     def test_nothing_available(self):
         self.availablePoll.delete()
@@ -66,7 +67,8 @@ class AvailablePollTestCase(PollTestCase):
         request = self.get_api_request('poll:polls', {}, self.user_test, self.factory.get, format='json')
 
         response = self.view(request)
-        self.assertEqual(len(response.data), 0)
+        dict_response_data = dict(response.data)
+        self.assertEqual(len(dict_response_data['results']), 0)
 
     def test_search_available(self):
         self.availablePoll2 = Poll.objects.create(content="I'm available too", publishedAt=datetime.now())
@@ -77,10 +79,11 @@ class AvailablePollTestCase(PollTestCase):
                                        self.factory.get, format='json')
 
         response = self.view(request)
+        dict_response_data = dict(response.data)
 
         expected_polls = [self.availablePoll, self.availablePoll2, self.availablePoll3]
-        for index, poll in enumerate(response.data):
-            serializer = PollSerializer(expected_polls[index])
+        for index, poll in enumerate(dict_response_data['results']):
+            serializer = AvailablePollSerializer(expected_polls[index])
             self.assertDictEqual(serializer.data, poll)
 
 
