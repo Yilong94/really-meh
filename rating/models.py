@@ -21,3 +21,7 @@ class Rating(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     rating = models.CharField(null=True, choices=RATING_CHOICES, max_length=6)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['poll', 'user'], name="unique_user_rating")
+        ]
