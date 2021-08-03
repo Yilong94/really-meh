@@ -10,6 +10,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 
 # Create your tests here.
 from extended_user.models import ExtendedUser
+from rating.choices import TRUE
 from rating.models import Rating
 from poll import views
 from poll.models import Poll
@@ -48,9 +49,11 @@ class AvailablePollTestCase(PollTestCase):
         self.archivedPoll = Poll.objects.create(content="I'm archived", publishedAt=datetime.now(),
                                                 archivedAt=datetime.now())
         self.availablePoll = Poll.objects.create(content="I'm available", publishedAt=datetime.now())
+        self.maxDiff = None
 
     def test_get_available(self):
-        request = self.get_api_request('poll:polls', {}, self.user_test, self.factory.get, format='json')
+        request = self.get_api_request('poll:available_polls', {'user-id': self.user_test.id}, self.user_test,
+                                       self.factory.get, format='json')
 
         response = self.view(request)
 
@@ -64,7 +67,8 @@ class AvailablePollTestCase(PollTestCase):
     def test_nothing_available(self):
         self.availablePoll.delete()
 
-        request = self.get_api_request('poll:polls', {}, self.user_test, self.factory.get, format='json')
+        request = self.get_api_request('poll:available_polls', {'user-id': self.user_test.id}, self.user_test,
+                                       self.factory.get, format='json')
 
         response = self.view(request)
         dict_response_data = dict(response.data)
@@ -75,16 +79,39 @@ class AvailablePollTestCase(PollTestCase):
         self.availablePoll3 = Poll.objects.create(content="I'm available too too too", publishedAt=datetime.now())
         self.availablePoll4 = Poll.objects.create(content="I have nothing", publishedAt=datetime.now())
 
-        request = self.get_api_request('poll:polls', {'search-string': 'available'}, self.user_test,
+        request = self.get_api_request('poll:available_polls', {'search-string': 'available',
+                                                                'user-id': self.user_test.id}, self.user_test,
                                        self.factory.get, format='json')
 
         response = self.view(request)
         dict_response_data = dict(response.data)
 
+        self.assertEqual(len(dict_response_data['results']), 3)
         expected_polls = [self.availablePoll, self.availablePoll2, self.availablePoll3]
         for index, poll in enumerate(dict_response_data['results']):
             serializer = AvailablePollSerializer(expected_polls[index])
             self.assertDictEqual(serializer.data, poll)
+
+    def test_search_available_with_user_id(self):
+        self.another_user = ExtendedUser.objects.create(username='some user 1', email='email1@email.com')
+        self.availablePoll2 = Poll.objects.create(content="I'm the 2nd available too", publishedAt=datetime.now(),
+                                                  creatorUser=self.another_user)
+        Rating.objects.create(user=self.another_user, poll=self.availablePoll2, rating=TRUE)
+
+        request = self.get_api_request('poll:available_polls', {
+            'user-id': self.another_user.id,
+            'search-string': '2nd'
+        }, self.user_test, self.factory.get, format='json')
+
+        response = self.view(request)
+        dict_response_data = dict(response.data)
+
+        self.assertEqual(len(dict_response_data['results']), 1)
+        expected_polls = [self.availablePoll2]
+        for index, poll in enumerate(dict_response_data['results']):
+            serializer = AvailablePollSerializer(expected_polls[index], context={"user_id": self.another_user.id})
+            self.assertDictEqual(serializer.data, poll)
+
 
 
 class CreatePollTestCase(PollTestCase):
@@ -101,8 +128,9 @@ class CreatePollTestCase(PollTestCase):
 
         new_content = "I'm the created poll!"
         create_data['content'] = new_content
+        create_data['title'] = 'new title'
 
-        request = self.get_api_request('poll:polls', create_data, self.user_test, self.factory.post, format='json')
+        request = self.get_api_request('poll:create_poll', create_data, self.user_test, self.factory.post, format='json')
 
         self.view(request)
 
@@ -126,15 +154,18 @@ class UpdatePollTestCase(PollTestCase):
 
         tomorrow = self.today + timedelta(days=1)
 
+        new_title = 'new title!'
         new_content = "I'm the updated poll!"
         update_data.pop('id', {})
+        update_data['title'] = new_title
         update_data['content'] = new_content
         update_data['archivedAt'] = tomorrow
         update_data['editedAt'] = tomorrow
 
-        self.view_helper('poll:polls', self.availablePoll.pk, update_data, self.factory.put, self.view)
+        self.view_helper('poll:update_poll', self.availablePoll.pk, update_data, self.factory.put, self.view)
 
-        created_poll = Poll.objects.filter(archivedAt=tomorrow, editedAt=tomorrow, content=new_content).count()
+        created_poll = Poll.objects.filter(archivedAt=tomorrow, editedAt=tomorrow, content=new_content,
+                                           title=new_title).count()
         self.assertEqual(created_poll, 1)
 
 
@@ -150,7 +181,7 @@ class DeletePollTestCase(PollTestCase):
         datetime_mock = Mock(wraps=datetime)
         datetime_mock.now.return_value = self.today
         with mock.patch('poll.views.datetime', datetime_mock):
-            self.view_helper('poll:polls', self.availablePoll.pk, {}, self.factory.delete, self.view)
+            self.view_helper('poll:delete_poll', self.availablePoll.pk, {}, self.factory.delete, self.view)
 
         poll_count = Poll.objects.filter(content=self.content, archivedAt=self.today).count()
         self.assertEqual(poll_count, 1)
