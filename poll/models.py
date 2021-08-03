@@ -7,9 +7,9 @@ class Poll(models.Model):
     title = models.TextField()
     content = models.TextField()
     creatorUser = models.ForeignKey(ExtendedUser, on_delete=models.SET_NULL, null=True)
-    archivedAt = models.DateTimeField(default=None, null=True)
-    publishedAt = models.DateTimeField(default=None, null=True)
-    editedAt = models.DateTimeField(default=None, null=True)
+    archivedAt = models.DateTimeField(default=None, null=True, blank=True)
+    publishedAt = models.DateTimeField(default=None, null=True, blank=True)
+    editedAt = models.DateTimeField(default=None, null=True, blank=True)
 
     ratings = models.ManyToManyField(
         ExtendedUser,
