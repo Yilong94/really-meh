@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Switch, Route } from "react-router-dom";
 
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HomePage from "../pages/HomePage";
 import NewPollPage from "../pages/NewPollPage";
@@ -16,6 +17,7 @@ const App: FC = () => {
         <Route path="/post/:id" component={SinglePostPage} />
         <Route path="/" component={HomePage} />
       </Switch>
+      <Footer />
     </div>
   );
 };
