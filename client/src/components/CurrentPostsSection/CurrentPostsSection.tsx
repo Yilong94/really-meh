@@ -1,5 +1,7 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import debounce from "lodash.debounce";
+import { useCallback } from "react";
 import { useRef } from "react";
 import { FC, useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -31,6 +33,15 @@ const CurrentPostsSection: FC = () => {
     }
   );
 
+  const debouncedRefetch = useCallback(
+    debounce(() => {
+      setCurrentPosts([]);
+      setMaxPage(0);
+      refetch();
+    }, 1000),
+    []
+  );
+
   useEffect(() => {
     refetch();
   }, []);
@@ -41,7 +52,10 @@ const CurrentPostsSection: FC = () => {
     if (isEndOfPage && !isFetching) {
       setMaxPage(maxPage + 1);
     }
-  }, [isEndOfPage, isFetching]);
+  }, [isEndOfPage, isFetching, currentPosts]);
+  useEffect(() => {
+    debouncedRefetch();
+  }, [searchValue]);
 
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value);
