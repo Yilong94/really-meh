@@ -53,5 +53,10 @@ class CreatePollSerializer(PollSerializer):
 class UpdatePollSerializer(PollSerializer):
     class Meta:
         model = Poll
-        fields = ['title', 'content', 'archivedAt', 'publishedAt', 'editedAt']
+        fields = ['title', 'content', 'publishedAt', 'editedAt']
 
+
+class DeletePollSerializer(PollSerializer):
+    class Meta:
+        model = Poll
+        fields = ['archivedAt']

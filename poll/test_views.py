@@ -158,12 +158,11 @@ class UpdatePollTestCase(PollTestCase):
         update_data.pop('id', {})
         update_data['title'] = new_title
         update_data['content'] = new_content
-        update_data['archivedAt'] = tomorrow
         update_data['editedAt'] = tomorrow
 
         self.view_helper('poll:update_poll', self.availablePoll.pk, update_data, self.factory.put, self.view)
 
-        created_poll = Poll.objects.filter(archivedAt=tomorrow, editedAt=tomorrow, content=new_content,
+        created_poll = Poll.objects.filter(editedAt=tomorrow, content=new_content,
                                            title=new_title).count()
         self.assertEqual(created_poll, 1)
 

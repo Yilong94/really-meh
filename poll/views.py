@@ -5,7 +5,7 @@ from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 
 from poll.models import Poll
-from poll.serializer import CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer
+from poll.serializer import CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer, DeletePollSerializer
 from utils.pagination import SmallResultsSetPagination
 
 
@@ -53,7 +53,7 @@ class UpdatePoll(generics.UpdateAPIView):
 
 class DeletePoll(generics.DestroyAPIView):
     queryset = Poll.objects.all()
-    serializer_class = UpdatePollSerializer
+    serializer_class = DeletePollSerializer
     permission_classes = []
 
     def delete(self, request, *args, **kwargs):
