@@ -16,7 +16,7 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 
 import { createPost, fetchPosts } from "../../api";
-import { POST } from "../../app/routes";
+import { HOME, POST } from "../../app/routes";
 import {
   categoriesKeyValueMap,
   fakeNewsPollLabelMap,
@@ -41,7 +41,7 @@ const NewPollForm: FC = () => {
   const history = useHistory();
 
   const {
-    isLoading: isFetchPostsLoading,
+    isFetching: isFetchPostsLoading,
     refetch,
     data: posts,
   } = useQuery(
@@ -55,7 +55,13 @@ const NewPollForm: FC = () => {
 
   const { isLoading: isCreatePostLoading, mutate } = useMutation(
     ReactQueryKey.CREATE_POST,
-    createPost
+    createPost,
+    {
+      onSuccess: () => {
+        setIsOpen(false);
+        history.push(HOME);
+      },
+    }
   );
 
   useEffect(() => {
