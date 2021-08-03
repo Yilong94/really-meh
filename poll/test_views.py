@@ -113,7 +113,6 @@ class AvailablePollTestCase(PollTestCase):
             self.assertDictEqual(serializer.data, poll)
 
 
-
 class CreatePollTestCase(PollTestCase):
     def setUp(self):
         self.view = views.CreatePoll.as_view()

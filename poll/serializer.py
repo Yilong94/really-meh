@@ -21,7 +21,7 @@ class AvailablePollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Poll
-        fields = ['title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'user_ratings',
+        fields = ['id', 'title', 'content', 'creatorUser', 'archivedAt', 'publishedAt', 'editedAt', 'user_ratings',
                   'number_of_user_comments', 'user_has_rated']
 
     def get_user_has_rated(self, obj):
@@ -33,10 +33,7 @@ class AvailablePollSerializer(serializers.ModelSerializer):
         if poll_rating:
             rating = poll_rating.rating
 
-        return {
-            "poll_id": obj.id,
-            "rating": rating
-        }
+        return rating
 
 
 class CreatePollSerializer(PollSerializer):
