@@ -9,12 +9,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Multiselect from "multiselect-react-dropdown";
 import { useEffect } from "react";
+import { useCallback } from "react";
 import { FC, useState } from "react";
 import Modal from "react-modal";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 
-import { fetchPosts } from "../../api";
+import { createPost, fetchPosts } from "../../api";
 import { POST } from "../../app/routes";
 import {
   categoriesKeyValueMap,
@@ -39,13 +40,22 @@ const NewPollForm: FC = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const history = useHistory();
 
-  const { isLoading, refetch, data } = useQuery(
+  const {
+    isLoading: isFetchPostsLoading,
+    refetch,
+    data: posts,
+  } = useQuery(
     ReactQueryKey.POSTS,
     async () => await fetchPosts(pollForm.content),
     {
       enabled: false,
       refetchOnWindowFocus: false,
     }
+  );
+
+  const { isLoading: isCreatePostLoading, mutate } = useMutation(
+    ReactQueryKey.CREATE_POST,
+    createPost
   );
 
   useEffect(() => {
@@ -69,13 +79,23 @@ const NewPollForm: FC = () => {
     setPollForm({ ...pollForm, [id]: value });
   };
 
-  const handleSubmitClick = () => {
+  const handleOpenModalClick = () => {
     setIsOpen(true);
   };
 
   const handleCloseModalClick = () => {
     setIsOpen(false);
   };
+
+  const handleSubmitclick = useCallback(() => {
+    mutate({
+      // TODO: hardcoded user id
+      creatorUser: 1,
+      title: pollForm.title,
+      content: pollForm.content,
+      tags: pollForm.tags,
+    });
+  }, [pollForm]);
 
   return (
     <>
@@ -177,7 +197,7 @@ const NewPollForm: FC = () => {
           </div>
         </div>
         <button
-          onClick={handleSubmitClick}
+          onClick={handleOpenModalClick}
           className="p-3 mt-8 text-base font-bold bg-yellow-300 rounded-full"
         >
           Submit
@@ -204,21 +224,21 @@ const NewPollForm: FC = () => {
         </div>
         <div className="mt-2 text-xs">Is this what you were looking for?</div>
         <div className="mt-4 space-y-2">
-          {isLoading ? (
+          {isFetchPostsLoading ? (
             <div className="flex justify-center">
               <FontAwesomeIcon
                 icon={faSpinner}
                 className="w-5 h-5 animate-spin"
               />
             </div>
-          ) : data?.length === 0 ? (
+          ) : posts?.length === 0 ? (
             <div className="text-base">
               Sorry, there are no similar polls found
             </div>
           ) : (
             <>
               {/* Get first two polls */}
-              {data?.slice(0, 2).map(({ postId, content, tags }, index) => {
+              {posts?.slice(0, 2).map(({ postId, content, tags }, index) => {
                 return (
                   <Card
                     key={index}
@@ -235,15 +255,29 @@ const NewPollForm: FC = () => {
           )}
         </div>
         <div className="flex mt-8 space-x-2">
-          <button
-            onClick={handleCloseModalClick}
-            className="flex-grow p-3 text-base font-bold border rounded-full border-color-300"
-          >
-            Edit post
-          </button>
-          <button className="flex-grow p-3 text-base font-bold bg-yellow-300 rounded-full">
-            Just post
-          </button>
+          {isCreatePostLoading ? (
+            <div className="flex justify-center">
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="w-5 h-5 animate-spin"
+              />
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={handleCloseModalClick}
+                className="flex-grow p-3 text-base font-bold border rounded-full border-color-300"
+              >
+                Edit post
+              </button>
+              <button
+                onClick={handleSubmitclick}
+                className="flex-grow p-3 text-base font-bold bg-yellow-300 rounded-full"
+              >
+                Just post
+              </button>
+            </>
+          )}
         </div>
       </Modal>
     </>
