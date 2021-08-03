@@ -9,8 +9,7 @@ from django.urls import reverse
 
 from poll.models import Poll
 from vote import views
-from vote.models import Vote, PollVote, CommentVote
-from vote.serializers import PollVoteSerializer
+from vote.models import PollVote, CommentVote
 
 
 class PollVoteTestCase(TestCase):
