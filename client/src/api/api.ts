@@ -438,3 +438,46 @@ export const voteComment = async ({
     throw err;
   }
 };
+
+interface CreatePostRequest {
+  creatorUser: number;
+  title: string;
+  content: string;
+  tags: string[];
+}
+
+interface CreatePostResponse {
+  title: string;
+  content: string;
+  creatorUser: string;
+  publishedAt: string;
+}
+
+export const createPost = async ({
+  creatorUser,
+  title,
+  content,
+  tags,
+}: CreatePostRequest): Promise<CreatePostResponse> => {
+  try {
+    const res = await axios.post(
+      routes.createPostRoute(),
+      {
+        creatorUser,
+        title,
+        content,
+        tags,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
