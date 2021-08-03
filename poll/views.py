@@ -5,18 +5,16 @@ from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 
 from poll.models import Poll
-from poll.serializer import PollSerializer, CreatePollSerializer, UpdatePollSerializer
+from poll.serializer import CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer
 from utils.pagination import StandardResultsSetPagination
 
 
-class PollList(generics.ListAPIView):
+class AvailablePolls(generics.ListAPIView):
     queryset = Poll.objects.all()
-    serializer_class = PollSerializer
+    serializer_class = AvailablePollSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = []
 
-
-class AvailablePolls(PollList):
     def get_queryset(self):
         available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
 
