@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 
 import Header from "../components/Header";
 import HomePage from "../pages/HomePage";
-import NewPostPage from "../pages/NewPostPage";
+import NewPollPage from "../pages/NewPollPage";
 import SinglePostPage from "../pages/SinglePostPage";
 
 const App: FC = () => {
@@ -12,7 +12,7 @@ const App: FC = () => {
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/new-post" component={NewPostPage} />
+        <Route exact path="/new-poll" component={NewPollPage} />
         <Route path="/post/:id" component={SinglePostPage} />
         <Route path="/" component={HomePage} />
       </Switch>

@@ -23,3 +23,8 @@ export const fakeNewsPollLabelMap: { [key: string]: string } = {
   "sw false": "Somewhat False",
   false: "False",
 };
+
+export const categoriesKeyValueMap: { [key: string]: string } = {
+  "covid-19": "COVID-19",
+  "ministry of health": "MINISTRY OF HEALTH",
+};

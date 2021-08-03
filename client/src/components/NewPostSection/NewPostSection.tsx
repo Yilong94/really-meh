@@ -10,8 +10,7 @@ const NewPostSection = () => {
   const history = useHistory();
 
   const handleClick = () => {
-    alert("clicked");
-    // history.push(routes.POST);
+    history.push(routes.NEW_POLL);
   };
 
   return (

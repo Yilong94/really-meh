@@ -333,19 +333,19 @@ export const ratePost = async ({
   labelKey: string;
 }): Promise<{ rating: { [label: string]: number } }> => {
   try {
-    // const res = await axios.post(
-    //   routes.ratePost(postId),
-    //   {
-    //     user: userId,
-    //     label: labelKey,
-    //   },
-    //   {
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json",
+    //   const res = await axios.post(
+    //     routes.ratePostRoute(postId),
+    //     {
+    //       user: userId,
+    //       label: labelKey,
     //     },
-    //   }
-    // );
+    //     {
+    //       headers: {
+    //         Accept: "application/json",
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
 
     // TODO: Remove mock data
     const res = {
