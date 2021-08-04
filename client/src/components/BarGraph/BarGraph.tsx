@@ -22,10 +22,11 @@ const BarColumn: FC<BarColumnProps> = ({
 
   return (
     <div className="flex items-center">
-      <div className="flex-grow h-5 bg-white">
-        <div style={style} className={barClass}>
-          <span className="ml-2 text-xs">{label}</span>
-        </div>
+      <div className="relative flex-grow h-5 bg-white">
+        <div style={style} className={barClass}></div>
+        <span className="absolute ml-2 text-xs top-2/4 transform translate -translate-y-1/2">
+          {label}
+        </span>
       </div>
 
       <div className="ml-2 text-xs">{`${value}%`}</div>
