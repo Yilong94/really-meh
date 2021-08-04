@@ -20,6 +20,7 @@ import {
 } from "../../constants";
 import { Post } from "../../entities/Post";
 import { Rating } from "../../entities/Rating";
+import { getUserId } from "../../utils";
 import BarGraph from "../BarGraph";
 import BarPoll from "../BarPoll";
 import Pill from "../Pill";
@@ -91,9 +92,8 @@ const CurrentPostsListItem: FC<Props> = ({
   const handlePollClick = useMemo(() => {
     return (key: string) => {
       setUserHasRatedState(key as Rating);
-      // TODO: hardcoded user id
       mutate({
-        user: 1,
+        user: getUserId(),
         poll: id,
         rating: key as Rating,
       });

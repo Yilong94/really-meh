@@ -10,6 +10,7 @@ import { fetchComments, fetchPosts } from "../../api";
 import { ReactQueryKey } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import { Post } from "../../entities/Post";
+import { getUserId } from "../../utils";
 import { useOnScreen } from "../../utils/hooks";
 import CommentsList from "../CommentsList";
 import CurrentPostsListItem from "../CurrentPostsListItem";
@@ -24,13 +25,11 @@ const SinglePostSection: FC = () => {
 
   const { isLoading: isFetchPostLoading, data: singlePost } = useQuery(
     ReactQueryKey.POST,
-    // TODO: hardcoded user id
-    async () => await fetchPosts(1, +postId)
+    async () => await fetchPosts(getUserId(), +postId)
   );
   const { isFetching: isFetchCommentsLoading, refetch } = useQuery(
     ReactQueryKey.COMMENTS,
-    // TODO: hardcoded user id
-    async () => await fetchComments(1, +postId, maxPage),
+    async () => await fetchComments(getUserId(), +postId, maxPage),
     {
       enabled: false,
       refetchOnWindowFocus: false,

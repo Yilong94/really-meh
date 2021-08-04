@@ -25,6 +25,7 @@ import {
 } from "../../constants";
 import { PollForm } from "../../entities/PollForm";
 import { YELLOW } from "../../styles/constants";
+import { getUserId } from "../../utils";
 import BarPoll from "../BarPoll";
 import Card from "../Card";
 import FormInput from "../FormInput";
@@ -46,8 +47,7 @@ const NewPollForm: FC = () => {
     data: posts,
   } = useQuery(
     ReactQueryKey.POSTS,
-    // TODO: hardcoded user id
-    async () => await fetchPosts(1, undefined, pollForm.content),
+    async () => await fetchPosts(getUserId(), undefined, pollForm.content),
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -96,8 +96,7 @@ const NewPollForm: FC = () => {
 
   const handleSubmitclick = useCallback(() => {
     mutate({
-      // TODO: hardcoded user id
-      creatorUser: 1,
+      creatorUser: getUserId(),
       title: pollForm.title,
       content: pollForm.content,
       tags: pollForm.tags,

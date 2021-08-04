@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { fetchPosts } from "../../api";
 import { ReactQueryKey } from "../../constants";
 import { Post } from "../../entities/Post";
+import { getUserId } from "../../utils";
 import { useOnScreen, usePrevious } from "../../utils/hooks";
 import CurrentPostsList from "../CurrentPostsList";
 import ResponsiveContainer from "../ResponsiveContainer";
@@ -23,8 +24,7 @@ const CurrentPostsSection: FC = () => {
 
   const { isFetching, refetch } = useQuery(
     ReactQueryKey.POSTS,
-    // TODO: hardcoded user id
-    async () => await fetchPosts(1, undefined, searchValue, maxPage),
+    async () => await fetchPosts(getUserId(), undefined, searchValue, maxPage),
     {
       enabled: false,
       refetchOnWindowFocus: false,

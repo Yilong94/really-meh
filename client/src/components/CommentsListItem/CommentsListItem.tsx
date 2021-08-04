@@ -14,6 +14,7 @@ import { voteComment } from "../../api";
 import { initialVote, ReactQueryKey } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import { Vote } from "../../entities/Vote";
+import { getUserId } from "../../utils";
 
 type Props = Comment;
 
@@ -88,9 +89,8 @@ const CommentsListItem: FC<Props> = ({
         setUserHasVotedState(Vote.UP);
       }
 
-      // TODO: hardcoded user id
       mutate({
-        user: 1,
+        user: getUserId(),
         comment: id,
         direction: vote,
       });
