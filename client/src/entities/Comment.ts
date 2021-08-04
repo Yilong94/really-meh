@@ -1,14 +1,18 @@
-export enum CommentVote {
-  UP_VOTE = "up vote",
-  DOWN_VOTE = "down vote",
-}
+import { Vote } from "./Vote";
 
 export interface Comment {
-  commentId: string;
-  creator: string;
-  createdAt: string;
+  id: number;
   content: string;
-  upVote: number;
-  downVote: number;
-  selfVote: CommentVote | null;
+  creatorUser: {
+    id: number;
+    name: string;
+  };
+  poll: number;
+  editedAt: string | null;
+  publishedAt: string | null;
+  userVotes: {
+    UP?: number;
+    DWN?: number;
+  };
+  userHasVoted: Vote.UP | Vote.DWN | null;
 }

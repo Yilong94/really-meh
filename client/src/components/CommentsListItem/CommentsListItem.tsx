@@ -6,68 +6,105 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { FC, MouseEventHandler, useState } from "react";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
 
 import { voteComment } from "../../api";
-import { ReactQueryKey } from "../../constants";
-import { Comment, CommentVote } from "../../entities/Comment";
+import { initialVote, ReactQueryKey } from "../../constants";
+import { Comment } from "../../entities/Comment";
+import { Vote } from "../../entities/Vote";
 
 type Props = Comment;
 
 const CommentsListItem: FC<Props> = ({
-  commentId,
-  creator,
-  createdAt,
+  id,
+  creatorUser,
+  publishedAt,
   content,
-  upVote,
-  downVote,
-  selfVote,
+  userVotes,
+  userHasVoted,
 }) => {
-  const { mutate, isLoading, data } = useMutation(
-    ReactQueryKey.VOTE_COMMENT,
-    voteComment
+  const {
+    mutate,
+    isLoading,
+    data: newUserVotes,
+  } = useMutation(ReactQueryKey.VOTE_COMMENT, voteComment);
+  // const [voteData, setVoteData] = useState({ upVote, downVote, selfVote });
+
+  const [userVotesState, setUserVotesState] =
+    useState<Comment["userVotes"]>(initialVote);
+  const [userHasVotedState, setUserHasVotedState] =
+    useState<Comment["userHasVoted"]>(null);
+
+  useEffect(() => {
+    setUserVotesState({ ...userVotesState, ...userVotes });
+  }, [userVotes]);
+  useEffect(() => {
+    setUserHasVotedState(userHasVoted);
+  }, [userHasVoted]);
+  useEffect(() => {
+    console.log("newUserVotes", newUserVotes);
+    newUserVotes && setUserVotesState({ ...userVotesState, ...newUserVotes });
+  }, [newUserVotes]);
+
+  const publishedAtFormatted = moment(publishedAt).fromNow();
+
+  const upVoteClass = useMemo(
+    () =>
+      classNames({
+        "text-gray-400": userHasVotedState !== Vote.UP,
+        "text-yellow-300": userHasVotedState === Vote.UP,
+      }),
+    [userHasVotedState]
   );
-  const [voteData, setVoteData] = useState({ upVote, downVote, selfVote });
-  const { id: postId } = useParams<{ id: string }>();
+  const downVoteClass = useMemo(
+    () =>
+      classNames({
+        "text-gray-400": userHasVotedState !== Vote.DWN,
+        "text-yellow-300": userHasVotedState === Vote.DWN,
+      }),
+    [userHasVotedState]
+  );
+  console.log("upVoteClass", upVoteClass);
 
-  useEffect(() => {
-    setVoteData({ ...voteData, upVote, downVote, selfVote });
-  }, [upVote, downVote, selfVote]);
-  useEffect(() => {
-    console.log("data", data);
-    data && setVoteData({ ...voteData, ...data });
-  }, [data]);
+  const handleVoteClick: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event: any) => {
+      const vote = (event.currentTarget as HTMLElement).id as Vote;
 
-  const createdAtFormatted = moment(createdAt).fromNow();
+      if (
+        (userHasVotedState === Vote.UP && vote === Vote.UP) ||
+        (userHasVotedState === Vote.DWN && vote === Vote.DWN)
+      ) {
+        setUserHasVotedState(null);
+      } else if (
+        (userHasVotedState === Vote.UP || userHasVotedState === null) &&
+        vote === Vote.DWN
+      ) {
+        setUserHasVotedState(Vote.DWN);
+      } else if (
+        (userHasVotedState === Vote.DWN || userHasVotedState === null) &&
+        vote === Vote.UP
+      ) {
+        setUserHasVotedState(Vote.UP);
+        console.log("voting up");
+      }
 
-  const upVoteClass = classNames({
-    "text-gray-400": voteData.selfVote === CommentVote.DOWN_VOTE,
-    "text-yellow-300": voteData.selfVote === CommentVote.UP_VOTE,
-  });
-  const downVoteClass = classNames({
-    "text-gray-400": voteData.selfVote === CommentVote.UP_VOTE,
-    "text-yellow-300": voteData.selfVote === CommentVote.DOWN_VOTE,
-  });
-
-  const handleVoteClick: MouseEventHandler<HTMLButtonElement> = (event) => {
-    const vote = (event.target as HTMLElement).id as CommentVote;
-    // TODO: hardcoded user id
-    mutate({
-      userId: "f9cb1ec8-9d4b-479d-afe6-2146cacb92ce",
-      postId,
-      commentId: commentId,
-      vote,
-    });
-  };
+      // TODO: hardcoded user id
+      mutate({
+        user: 1,
+        comment: id,
+        direction: vote,
+      });
+    },
+    [userHasVotedState]
+  );
 
   return (
     <div className="p-4">
       <div className="flex justify-between text-xs">
-        <div>Commented by {creator}</div>
-        <div>{createdAtFormatted}</div>
+        <div>Commented by {creatorUser.name}</div>
+        <div>{publishedAtFormatted}</div>
       </div>
       <div className="my-2 text-base">{content}</div>
 
@@ -79,15 +116,15 @@ const CommentsListItem: FC<Props> = ({
         <div className="flex mt-4 space-x-2">
           <button
             className="flex items-center space-x-1"
-            id={CommentVote.UP_VOTE}
+            id={Vote.UP}
             onClick={handleVoteClick}
           >
             <FontAwesomeIcon className={upVoteClass} icon={faCaretSquareUp} />
-            <div className="text-xs">{voteData.upVote}</div>
+            <div className="text-xs">{userVotesState.UP}</div>
           </button>
           <button
             className="flex items-center space-x-1"
-            id={CommentVote.DOWN_VOTE}
+            id={Vote.DWN}
             onClick={handleVoteClick}
           >
             <FontAwesomeIcon
@@ -95,7 +132,7 @@ const CommentsListItem: FC<Props> = ({
               icon={faCaretSquareDown}
             />
           </button>
-          <div className="text-xs">{voteData.downVote}</div>
+          <div className="text-xs">{userVotesState.DWN}</div>
         </div>
       )}
     </div>

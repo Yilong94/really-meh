@@ -33,6 +33,11 @@ export const initialRating = {
   FSE: 0,
 };
 
+export const initialVote = {
+  UP: 0,
+  DWN: 0,
+};
+
 export const categoriesKeyValueMap: { [key: string]: string } = {
   "covid-19": "COVID-19",
   "ministry of health": "MINISTRY OF HEALTH",

@@ -29,12 +29,13 @@ const SinglePostSection: FC = () => {
   );
   const { isFetching: isFetchCommentsLoading, refetch } = useQuery(
     ReactQueryKey.COMMENTS,
-    async () => await fetchComments(postId, maxPage),
+    // TODO: hardcoded user id
+    async () => await fetchComments(1, +postId, maxPage),
     {
       enabled: false,
       refetchOnWindowFocus: false,
-      onSuccess: (data: Comment[]) => {
-        setComments([...comments, ...data]);
+      onSuccess: (data) => {
+        setComments([...comments, ...data.results]);
       },
     }
   );
