@@ -66,7 +66,6 @@ export const fetchPosts = async (
 
     return formattedData;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

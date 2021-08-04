@@ -41,7 +41,6 @@ interface Props {
 const BarGraph: FC<Props> = ({ data, question }) => {
   const highestValue = Math.max(...Object.values(data));
   const totalCount = Object.values(data).reduce((a, b) => a + b, 0);
-  console.log("data", data);
   const dataInPercent = Object.keys(data).reduce(
     (a, b) => ({
       ...a,
@@ -49,7 +48,6 @@ const BarGraph: FC<Props> = ({ data, question }) => {
     }),
     {} as { [key: string]: number }
   );
-  console.log("dataInPercent", dataInPercent);
 
   return (
     <div className="p-2 border-2 border-black rounded-md">

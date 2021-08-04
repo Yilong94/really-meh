@@ -29,9 +29,7 @@ const CurrentPostsSection: FC = () => {
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        console.log("is success!");
         const newPosts = data.results;
-        console.log(newPosts);
         setCurrentPosts([...currentPosts, ...newPosts]);
       },
     }
@@ -66,8 +64,6 @@ const CurrentPostsSection: FC = () => {
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value);
   };
-
-  console.log("currentPosts", currentPosts);
 
   return (
     <ResponsiveContainer className="flex-grow bg-white">
