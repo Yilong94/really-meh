@@ -4,8 +4,6 @@ from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from comment.models import Comment
-from poll.models import Poll
 from vote.choices import UP, DOWN
 from vote.models import PollVote, CommentVote
 from vote.serializers import PollVoteSerializer, CommentVoteSerializer
