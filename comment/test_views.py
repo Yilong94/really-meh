@@ -63,13 +63,14 @@ class AvailableCommentsTestCase(CommentTestCase):
         CommentVote.objects.create(user=self.user_test, comment=comment, direction=UP)
         CommentVote.objects.create(user=user_test, comment=comment, direction=UP)
 
-        request = self.get_api_request('comment:available_comments', {}, self.user_test, self.factory.get,
+        request = self.get_api_request('comment:available_comments', {'user-id': self.user_test.pk}, self.user_test,
+                                       self.factory.get,
                                        format='json')
 
         response = self.view(request)
         dict_response_data = dict(response.data)
         self.assertEqual(len(dict_response_data['results']), 1)
-        expected_data = AvailableCommentSerializer(comment)
+        expected_data = AvailableCommentSerializer(comment, context={"user_id": self.user_test})
         self.assertDictEqual(dict_response_data['results'][0], expected_data.data)
 
 

@@ -16,6 +16,9 @@ class AvailableComments(generics.ListAPIView):
 
     user_id = None
 
+    def get_serializer(self, *args, **kwargs):
+        return super().get_serializer(*args, **kwargs, context={'user_id': self.user_id})
+
     def get_queryset(self):
         poll_id = self.request.query_params.get('poll-id')
 

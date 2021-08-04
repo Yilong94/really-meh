@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from poll.models import Poll
 from poll.serializer import CreatePollSerializer, UpdatePollSerializer, AvailablePollSerializer, DeletePollSerializer
 from utils.pagination import SmallResultsSetPagination
+from similarity_engine.similarity_engine import SimilarityEngine
 
 
 class AvailablePolls(generics.ListAPIView):
@@ -15,10 +16,24 @@ class AvailablePolls(generics.ListAPIView):
     pagination_class = SmallResultsSetPagination
     permission_classes = []
 
+    similarity_engine = SimilarityEngine()
+
     user_id = None
 
     def get_serializer(self, *args, **kwargs):
         return super().get_serializer(*args, **kwargs, context={'user_id': self.user_id})
+
+    def get_similar_polls_cond(self, queryset, search_string):
+        mapper = queryset.values('id', 'content')
+
+        corpus = [mapped_obj['content'] for mapped_obj in mapper]
+
+        similar_contents_index = self.similarity_engine.run(search_string, corpus)
+
+        if similar_contents_index and len(similar_contents_index) > 0:
+            return Q(id__in=[mapper[index]['id'] for index in similar_contents_index])
+        else:
+            return Q()
 
     def get_queryset(self):
         search_string = self.request.query_params.get('search-string')
@@ -26,7 +41,8 @@ class AvailablePolls(generics.ListAPIView):
 
         available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
         if search_string:
-            available_cond &= Q(content__contains=search_string)
+            query_set = self.queryset.filter(available_cond)
+            available_cond &= self.get_similar_polls_cond(query_set, search_string)
 
         if poll_id:
             available_cond &= Q(id=poll_id)
