@@ -284,3 +284,83 @@ export const voteComment = async ({
     throw err;
   }
 };
+
+////////////////////////////////
+// AUTHENTICATION
+////////////////////////////////
+
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+interface LoginResponse {
+  user: {
+    id: number;
+    name: string;
+  };
+}
+
+export const login = async ({
+  username,
+  password,
+}: LoginRequest): Promise<LoginResponse> => {
+  try {
+    const res = await axios.post(
+      routes.loginRoute(),
+      {
+        username,
+        password,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+interface SignupRequest {
+  username: string;
+  password: string;
+  password2: string;
+  email: string;
+  name: string;
+}
+
+interface SignupResponse {
+  username: string;
+  email: string;
+  name: string;
+}
+
+export const signup = async ({
+  username,
+  password,
+  password2,
+  email,
+  name,
+}: SignupRequest): Promise<SignupResponse> => {
+  try {
+    const res = await axios.post(
+      routes.signupRoute(),
+      { username, password, password2, email, name },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};

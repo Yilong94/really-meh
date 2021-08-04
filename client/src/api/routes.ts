@@ -16,3 +16,7 @@ export const createCommentRoute = (): string =>
 
 // VOTE
 export const voteCommentRoute = (): string => API_PREPEND + `/vote/comment/`;
+
+// AUTHENTICATION
+export const loginRoute = (): string => API_PREPEND + "/user/login/";
+export const signupRoute = (): string => API_PREPEND + "/user/signup/";
