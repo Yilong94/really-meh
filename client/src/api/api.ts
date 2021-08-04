@@ -174,21 +174,24 @@ export const ratePost = async ({
   }
 };
 
-export const commentPost = async ({
+interface commentPollRequest {
+  userId: number;
+  pollId: string;
+  content: string;
+}
+
+export const commentPoll = async ({
   userId,
-  postId,
-  comment,
-}: {
-  userId: string;
-  postId: string;
-  comment: string;
-}) => {
+  pollId,
+  content,
+}: commentPollRequest): Promise<void> => {
   try {
     const res = await axios.post(
-      routes.commentsRoute(),
+      routes.createCommentRoute(),
       {
         user: userId,
-        comment: comment,
+        poll: pollId,
+        content,
       },
       {
         headers: {

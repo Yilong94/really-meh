@@ -11,6 +11,8 @@ export const ratePostRoute = (): string => API_PREPEND + `/rating/rate/`;
 
 // COMMENTS
 export const commentsRoute = (): string => API_PREPEND + `/comment/`;
+export const createCommentRoute = (): string =>
+  API_PREPEND + `/comment/create/`;
 
 // VOTE
 export const voteCommentRoute = (): string => API_PREPEND + `/vote/comment/`;

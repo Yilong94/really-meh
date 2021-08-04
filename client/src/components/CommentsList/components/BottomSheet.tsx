@@ -5,14 +5,14 @@ import Sheet, { SheetRef } from "react-modal-sheet";
 
 interface Props {
   handleCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handlePostComment: () => void;
+  handlePollComment: () => void;
   isOpen: boolean;
   setOpen: (btmSheetState: boolean) => void;
   comment: string;
 }
 
 const BottomSheet: FC<Props> = (Props) => {
-  const { handleCommentChange, handlePostComment, isOpen, setOpen, comment } =
+  const { handleCommentChange, handlePollComment, isOpen, setOpen, comment } =
     Props;
   const ref = useRef<SheetRef>();
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const BottomSheet: FC<Props> = (Props) => {
             />
           </div>
           <button
-            onClick={handlePostComment}
+            onClick={handlePollComment}
             className="p-1 my-2 text-base font-bold bg-yellow-300 rounded-full"
             style={{
               justifyContent: "center",

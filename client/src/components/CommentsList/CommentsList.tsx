@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { commentPost } from "../../api";
+import { commentPoll } from "../../api";
 import { ReactQueryKey, SortBy } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import CommentsListItem from "../CommentsListItem";
@@ -18,10 +18,10 @@ const CommentsList: FC<Props> = ({ comments }) => {
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.TOP);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
-  const { id: postId } = useParams<{ id: string }>();
+  const { id: pollId } = useParams<{ id: string }>();
   const { mutate, isLoading, data } = useMutation(
     ReactQueryKey.VOTE_COMMENT,
-    commentPost
+    commentPoll
   );
 
   const numComments = comments.length;
@@ -44,11 +44,11 @@ const CommentsList: FC<Props> = ({ comments }) => {
     setComment(event.target.value);
   };
 
-  const handlePostComment = () => {
+  const handlePollComment = () => {
     mutate({
-      userId: "f9cb1ec8-9d4b-479d-afe6-2146cacb92ce",
-      postId,
-      comment,
+      userId: 1,
+      pollId,
+      content: comment,
     });
   };
 
@@ -65,7 +65,7 @@ const CommentsList: FC<Props> = ({ comments }) => {
         </div>
         <BottomSheet
           handleCommentChange={handleCommentChange}
-          handlePostComment={handlePostComment}
+          handlePollComment={handlePollComment}
           isOpen={isOpen}
           setOpen={setOpen}
           comment={comment}
