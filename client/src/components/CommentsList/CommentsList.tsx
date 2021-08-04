@@ -1,14 +1,14 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useState } from "react";
-import Sheet from "react-modal-sheet";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 
 import { commentPost } from "../../api";
 import { ReactQueryKey, SortBy } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import CommentsListItem from "../CommentsListItem";
+import { BottomSheet } from "./components/BottomSheet";
 interface Props {
   comments: Comment[];
 }
@@ -62,64 +62,13 @@ const CommentsList: FC<Props> = ({ comments }) => {
             />
           </button>
         </div>
-        <>
-          <Sheet
-            isOpen={isOpen}
-            onClose={() => setOpen(false)}
-            snapPoints={[400]}
-            initialSnap={0}
-          >
-            <Sheet.Container>
-              <Sheet.Content
-                style={{
-                  justifyContent: "center",
-                  display: "block",
-                }}
-              >
-                <textarea
-                  style={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    borderRadius: "10px",
-                    border: "2px solid #F9D040",
-                    outline: "none",
-                    padding: "10px",
-                    height: "80px",
-                    marginTop: "16px",
-                    display: "flex",
-                    width: "90%",
-                    resize: "none",
-                  }}
-                  placeholder="Add a comment..."
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "Add a comment...")}
-                  value={comment}
-                  onChange={handleCommentChange}
-                />
-                <button
-                  onClick={handlePostComment}
-                  className="p-1 my-2 text-base font-bold bg-yellow-300 rounded-full"
-                  style={{
-                    justifyContent: "center",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    borderRadius: "25px",
-                    border: "2px solid #F9D040",
-                    outline: "none",
-                    padding: "3px",
-                    marginTop: "16px",
-                    display: "flex",
-                    width: "90%",
-                    resize: "none",
-                  }}
-                >
-                  Post
-                </button>
-              </Sheet.Content>
-            </Sheet.Container>
-            <Sheet.Backdrop />
-          </Sheet>
-        </>
+        <BottomSheet
+          handleCommentChange={handleCommentChange}
+          handlePostComment={handlePostComment}
+          isOpen={isOpen}
+          setOpen={setOpen}
+          comment={comment}
+        />
         <button
           onClick={handleAddComment}
           className="p-1 my-2 text-base font-bold bg-yellow-300 rounded-full"
