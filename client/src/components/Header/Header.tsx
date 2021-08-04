@@ -2,15 +2,14 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC } from "react";
 
+import { ReactComponent as Logo } from "../../assets/images/logo.svg";
 import ResponsiveContainer from "../ResponsiveContainer";
 
 const Header: FC = () => {
   return (
     <div className="bg-white">
-      <ResponsiveContainer className="flex justify-between h-16 p-4">
-        <div className="flex content-center justify-center w-16 bg-gray-400">
-          Logo
-        </div>
+      <ResponsiveContainer className="flex items-center justify-between h-16 px-4 py-2">
+        <Logo className="max-h-12" />
         <div className="p-2">
           <button className="flex content-center justify-center">
             <FontAwesomeIcon icon={faBars} />
