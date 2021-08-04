@@ -1,6 +1,7 @@
 from django.db.models import Q
 
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from comment.models import Comment
 from comment.serializers import AvailableCommentSerializer, CommentSerializer
@@ -13,6 +14,8 @@ class AvailableComments(generics.ListAPIView):
     pagination_class = SmallResultsSetPagination
     permission_classes = []
 
+    user_id = None
+
     def get_queryset(self):
         poll_id = self.request.query_params.get('poll-id')
 
@@ -21,6 +24,15 @@ class AvailableComments(generics.ListAPIView):
             available_cond &= Q(poll__id=poll_id)
 
         return self.queryset.filter(available_cond)
+
+    def list(self, request, *args, **kwargs):
+        user_id = self.request.query_params.get('user-id')
+        if not user_id:
+            return Response(data={"message": "user-id not supplied"}, status=status.HTTP_400_BAD_REQUEST)
+
+        self.user_id = user_id
+
+        return super().list(request, *args, **kwargs)
 
 
 class CreateComment(generics.CreateAPIView):

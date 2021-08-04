@@ -2,7 +2,7 @@ from datetime import datetime
 
 from rest_framework import serializers
 
-from extended_user.serializers import ExtendedUserSerializer, ExtendedUserForPollSerializer
+from extended_user.serializers import ExtendedUserSerializer, ExtendedUserNameIdSerializer
 from poll.models import Poll
 from rating.models import Rating
 
@@ -20,7 +20,7 @@ class AvailablePollSerializer(serializers.ModelSerializer):
     userRatings = serializers.ReadOnlyField(read_only=True, source='user_ratings')
     numberOfUserComments = serializers.ReadOnlyField(read_only=True, source='number_of_user_comments')
     userHasRated = serializers.SerializerMethodField(read_only=True, method_name='get_user_has_rated')
-    creatorUser = ExtendedUserForPollSerializer()
+    creatorUser = ExtendedUserNameIdSerializer()
 
     class Meta:
         model = Poll
