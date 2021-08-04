@@ -83,14 +83,15 @@ class CreateCommentsTestCase(CommentTestCase):
 
         response = self.view(request)
 
-        self.assertDictEqual(response.data, {'id': 1, 'creatorUser': self.user_test.pk, 'poll': self.available_poll.pk,
-                                             'content': 'abcdef',
-                                             'editedAt': None,
-                                             'publishedAt': self.today.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                                             'archivedAt': None})
+        query = Comment.objects.filter(creatorUser=self.user_test, poll=self.available_poll)
 
-        comment_count = Comment.objects.filter(creatorUser=self.user_test, poll=self.available_poll).count()
+        comment_count = query.count()
         self.assertEqual(comment_count, 1)
+
+        the_comment = query.first()
+        expected_data = CommentSerializer(instance=the_comment).data
+
+        self.assertDictEqual(response.data, expected_data)
 
 
 class UpdateCommentsTestCase(CommentTestCase):
@@ -102,15 +103,9 @@ class UpdateCommentsTestCase(CommentTestCase):
                                          publishedAt=datetime.now())
 
         self.create_data['content'] = "I'm updated!"
-        # request = self.get_api_request('comment:update_comment', self.create_data, self.user_test, self.factory.patch,
-        #                                format='json')
-
 
         response = self.view_helper('comment:update_comment', comment.pk, self.create_data, self.factory.put, self.view)
 
         comment.refresh_from_db()
         expected_data = CommentSerializer(instance=comment).data
-        print(response.data)
-        print(expected_data)
-
         self.assertDictEqual(response.data, expected_data)
