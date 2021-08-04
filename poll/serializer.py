@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from rest_framework import serializers
 
@@ -45,7 +45,7 @@ class CreatePollSerializer(PollSerializer):
         fields = ['title', 'content', 'creatorUser', 'publishedAt']
 
     def create(self, validated_data):
-        published_at = validated_data.get('publishedAt') if validated_data.get('publishedAt') else datetime.datetime.now()
+        published_at = validated_data.get('publishedAt') if validated_data.get('publishedAt') else datetime.now()
 
         validated_data['publishedAt'] = published_at
         return super().create(validated_data)

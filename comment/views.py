@@ -1,9 +1,6 @@
 from django.db.models import Q
-from django.shortcuts import render
 
-# Create your views here.
-from rest_framework import generics, status
-from rest_framework.response import Response
+from rest_framework import generics
 
 from comment.models import Comment
 from comment.serializers import AvailableCommentSerializer, CommentSerializer
@@ -27,6 +24,12 @@ class AvailableComments(generics.ListAPIView):
 
 
 class CreateComment(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = []
+
+
+class UpdateComment(generics.UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = []
