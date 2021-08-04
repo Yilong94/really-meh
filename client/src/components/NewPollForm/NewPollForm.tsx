@@ -105,10 +105,10 @@ const NewPollForm: FC = () => {
 
   return (
     <>
-      <ResponsiveContainer className="flex flex-col flex-grow p-4 bg-white">
+      <ResponsiveContainer className="flex flex-col flex-grow p-4 mt-2 bg-white">
         <div className="text-lg font-bold">New Poll</div>
         <div className="mb-4 text-xs">What fake news did you spot today?</div>
-        <div className="space-y-2">
+        <div className="space-y-4">
           <div className="flex flex-col">
             <FormLabel>What is the title of your post?</FormLabel>
             <FormInput

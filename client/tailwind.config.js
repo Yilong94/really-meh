@@ -26,6 +26,9 @@ module.exports = {
         48: "12rem",
       },
     },
+    fontFamily: {
+      poppins: ["Poppins"],
+    },
   },
   variants: {
     extend: {

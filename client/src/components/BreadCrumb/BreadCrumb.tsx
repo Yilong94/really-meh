@@ -17,7 +17,7 @@ const BreadCrumb: FC<Props> = ({ crumbs }) => {
   const allCrumbsExceptLast = crumbs.slice(0, -1);
 
   return (
-    <ResponsiveContainer className="flex items-center px-4 py-2 my-4 bg-white">
+    <ResponsiveContainer className="flex items-center px-4 py-2 mt-2 bg-white">
       {allCrumbsExceptLast.map((crumb, index) => {
         return (
           <>
