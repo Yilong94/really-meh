@@ -54,7 +54,8 @@ const CommentsListItem: FC<Props> = ({
   const upVoteClass = useMemo(
     () =>
       classNames({
-        "text-gray-400": userHasVotedState !== Vote.UP,
+        "text-lg": true,
+        "text-black": userHasVotedState !== Vote.UP,
         "text-yellow-300": userHasVotedState === Vote.UP,
       }),
     [userHasVotedState]
@@ -62,7 +63,8 @@ const CommentsListItem: FC<Props> = ({
   const downVoteClass = useMemo(
     () =>
       classNames({
-        "text-gray-400": userHasVotedState !== Vote.DWN,
+        "text-lg": true,
+        "text-black": userHasVotedState !== Vote.DWN,
         "text-yellow-300": userHasVotedState === Vote.DWN,
       }),
     [userHasVotedState]
@@ -113,7 +115,7 @@ const CommentsListItem: FC<Props> = ({
       ) : (
         <div className="flex mt-4 space-x-2">
           <button
-            className="flex items-center space-x-1"
+            className="flex items-center text-black space-x-1"
             id={Vote.UP}
             onClick={handleVoteClick}
           >
@@ -121,7 +123,7 @@ const CommentsListItem: FC<Props> = ({
             <div className="text-xs">{userVotesState.UP}</div>
           </button>
           <button
-            className="flex items-center space-x-1"
+            className="flex items-center text-black space-x-1"
             id={Vote.DWN}
             onClick={handleVoteClick}
           >
