@@ -20,10 +20,17 @@ export enum SortBy {
 }
 
 export const fakeNewsPollLabelMap: { [key: string]: string } = {
-  true: "True",
-  "sw true": "Somewhat True",
-  "sw false": "Somewhat False",
-  false: "False",
+  TR: "True",
+  SW_TR: "Somewhat True",
+  SW_FSE: "Somewhat False",
+  FSE: "False",
+};
+
+export const initialRating = {
+  TR: 0,
+  SW_TR: 0,
+  SW_FSE: 0,
+  FSE: 0,
 };
 
 export const categoriesKeyValueMap: { [key: string]: string } = {

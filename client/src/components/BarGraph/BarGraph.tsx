@@ -42,6 +42,16 @@ interface Props {
 
 const BarGraph: FC<Props> = ({ data, question }) => {
   const highestValue = Math.max(...Object.values(data));
+  const totalCount = Object.values(data).reduce((a, b) => a + b, 0);
+  console.log("data", data);
+  const dataInPercent = Object.keys(data).reduce(
+    (a, b) => ({
+      ...a,
+      [b]: totalCount === 0 ? 0.0 : Math.round((data[b] / totalCount) * 100),
+    }),
+    {} as { [key: string]: number }
+  );
+  console.log("dataInPercent", dataInPercent);
 
   return (
     <div className="p-2 border-2 border-black rounded-md">
@@ -54,7 +64,7 @@ const BarGraph: FC<Props> = ({ data, question }) => {
             <BarColumn
               key={index}
               label={label}
-              value={data[label]}
+              value={dataInPercent[label]}
               color={color}
             />
           );

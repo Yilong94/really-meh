@@ -46,7 +46,8 @@ const NewPollForm: FC = () => {
     data: posts,
   } = useQuery(
     ReactQueryKey.POSTS,
-    async () => await fetchPosts(pollForm.content),
+    // TODO: hardcoded user id
+    async () => await fetchPosts(1, undefined, pollForm.content),
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -237,26 +238,28 @@ const NewPollForm: FC = () => {
                 className="w-5 h-5 animate-spin"
               />
             </div>
-          ) : posts?.length === 0 ? (
+          ) : posts?.results.length === 0 ? (
             <div className="text-base">
               Sorry, there are no similar polls found
             </div>
           ) : (
             <>
               {/* Get first two polls */}
-              {posts?.slice(0, 2).map(({ postId, content, tags }, index) => {
-                return (
-                  <Card
-                    key={index}
-                    title="Poll"
-                    content={content}
-                    tags={tags}
-                    onContentClick={() => {
-                      history.push(POST + `/${postId}`);
-                    }}
-                  />
-                );
-              })}
+              {posts?.results
+                .slice(0, 2)
+                .map(({ id, content, tags }, index) => {
+                  return (
+                    <Card
+                      key={index}
+                      title="Poll"
+                      content={content}
+                      tags={tags}
+                      onContentClick={() => {
+                        history.push(POST + `/${id}`);
+                      }}
+                    />
+                  );
+                })}
             </>
           )}
         </div>

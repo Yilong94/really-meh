@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useOnScreen = (ref: any) => {
   const [isIntersecting, setIntersecting] = useState(false);
@@ -16,4 +16,12 @@ export const useOnScreen = (ref: any) => {
   }, []);
 
   return isIntersecting;
+};
+
+export const usePrevious = (value: any) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 };

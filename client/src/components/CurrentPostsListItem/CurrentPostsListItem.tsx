@@ -14,76 +14,103 @@ import { ratePost } from "../../api";
 import { POST } from "../../app/routes";
 import {
   fakeNewsPollLabelMap,
+  initialRating,
   POLL_QUESTION,
   ReactQueryKey,
 } from "../../constants";
-import { CurrentPost } from "../../entities/CurrentPost";
+import { Post } from "../../entities/Post";
+import { Rating } from "../../entities/Rating";
 import BarGraph from "../BarGraph";
 import BarPoll from "../BarPoll";
 import Pill from "../Pill";
 
-type Props = CurrentPost;
+type Props = Post;
 
 const CurrentPostsListItem: FC<Props> = ({
-  postId,
-  creator,
-  createdAt,
+  id,
+  creatorUser,
+  publishedAt,
   title,
   tags,
   content,
-  poll,
-  numComment,
+  userRatings,
+  numberOfUserComments,
+  userHasRated,
 }) => {
   const {
     isLoading: isRatePostLoading,
     mutate,
-    data: { rating } = {},
+    data: { data: newUserRatings } = {},
   } = useMutation(ReactQueryKey.RATE_POST, ratePost);
 
-  const [pollData, setPollData] = useState(poll);
+  const [pollData, setPollData] = useState<
+    Pick<Post, "userRatings" | "userHasRated">
+  >({
+    userRatings: initialRating,
+    userHasRated: null,
+  });
   useEffect(() => {
-    setPollData(poll);
-  }, [poll]);
+    setPollData({
+      ...pollData,
+      userRatings: { ...pollData.userRatings, ...userRatings },
+    });
+  }, [userRatings]);
   useEffect(() => {
-    rating && setPollData({ data: rating, hasVoted: true });
-  }, [rating]);
+    setPollData({ ...pollData, userHasRated });
+  }, [userHasRated]);
+  useEffect(() => {
+    newUserRatings &&
+      setPollData({
+        ...pollData,
+        userRatings: { ...pollData.userRatings, ...newUserRatings },
+      });
+  }, [newUserRatings]);
+
   const history = useHistory();
 
-  const createdAtFormatted = moment(createdAt).fromNow();
+  const publishedAtFormatted = moment(publishedAt).fromNow();
   const dataFormatted = useMemo(
     () =>
-      Object.keys(pollData.data).reduce((acc, val) => {
-        return { ...acc, [fakeNewsPollLabelMap[val]]: pollData.data[val] };
+      Object.keys(pollData.userRatings).reduce((acc, val) => {
+        return {
+          ...acc,
+          [fakeNewsPollLabelMap[val]]: (
+            pollData.userRatings as { [key: string]: number }
+          )[val],
+        };
       }, {}),
-    [pollData.data]
+    [pollData.userRatings]
   );
   const labelFormatted = useMemo(
     () =>
-      Object.keys(pollData.data).reduce((acc, val) => {
+      Object.keys(pollData.userRatings).reduce((acc, val) => {
         return { ...acc, [val]: fakeNewsPollLabelMap[val] };
       }, {}),
-    [pollData.data]
+    [pollData.userRatings]
   );
 
   const handlePollClick = useMemo(() => {
     return (key: string) => {
+      setPollData({ ...pollData, userHasRated: key as Rating });
       // TODO: hardcoded user id
       mutate({
-        userId: "f9cb1ec8-9d4b-479d-afe6-2146cacb92ce",
-        postId,
-        labelKey: key,
+        user: 1,
+        poll: id,
+        rating: key as Rating,
       });
     };
-  }, [postId]);
+  }, [id]);
 
   const redirectToPost = () => {
-    history.push(POST + `/${postId}`);
+    history.push(POST + `/${id}`);
   };
 
   return (
     <div className="p-4 bg-white">
-      <div className="text-xs">{`Posted by ${creator}`}</div>
-      <div className="text-xs">{createdAtFormatted}</div>
+      <div className="text-xs">{`Posted by ${
+        creatorUser.name || "Unknown"
+      }`}</div>
+      <div className="text-xs">{publishedAtFormatted}</div>
       <div className="text-base font-bold" onClick={redirectToPost}>
         {title}
       </div>
@@ -98,7 +125,7 @@ const CurrentPostsListItem: FC<Props> = ({
         <div className="flex justify-center">
           <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
         </div>
-      ) : pollData.hasVoted ? (
+      ) : pollData.userHasRated ? (
         <BarGraph data={dataFormatted} question={POLL_QUESTION} />
       ) : (
         <BarPoll
@@ -114,7 +141,7 @@ const CurrentPostsListItem: FC<Props> = ({
           onClick={redirectToPost}
         >
           <FontAwesomeIcon className="text-gray-400" icon={faCommentAlt} />
-          <div className="text-xs">{numComment} Comments</div>
+          <div className="text-xs">{numberOfUserComments} Comments</div>
         </button>
         <button className="flex items-center space-x-1">
           <FontAwesomeIcon className="text-gray-400" icon={faShareSquare} />

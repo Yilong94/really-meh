@@ -6,10 +6,10 @@ import { FC } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { fetchComments, fetchPost } from "../../api";
+import { fetchComments, fetchPosts } from "../../api";
 import { ReactQueryKey } from "../../constants";
 import { Comment } from "../../entities/Comment";
-import { CurrentPost } from "../../entities/CurrentPost";
+import { Post } from "../../entities/Post";
 import { useOnScreen } from "../../utils/hooks";
 import CommentsList from "../CommentsList";
 import CurrentPostsListItem from "../CurrentPostsListItem";
@@ -24,7 +24,8 @@ const SinglePostSection: FC = () => {
 
   const { isLoading: isFetchPostLoading, data: singlePost } = useQuery(
     ReactQueryKey.POST,
-    async () => await fetchPost(postId)
+    // TODO: hardcoded user id
+    async () => await fetchPosts(1, +postId)
   );
   const { isFetching: isFetchCommentsLoading, refetch } = useQuery(
     ReactQueryKey.COMMENTS,
@@ -61,7 +62,7 @@ const SinglePostSection: FC = () => {
         </div>
       ) : (
         <>
-          <CurrentPostsListItem {...(singlePost as CurrentPost)} />
+          <CurrentPostsListItem {...(singlePost?.results[0] as Post)} />
           <CommentsList comments={comments} />
         </>
       )}
