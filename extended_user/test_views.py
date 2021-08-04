@@ -40,7 +40,7 @@ class UserSignUpTestCase(UserTestCase):
     def test_sign_up(self):
         request = self.get_api_request('user:user_signup',
                                        {'username': 'someuser1', 'password': '12345678ABCRR',
-                                        'password2': '12345678ABCRR', 'email': 'abc@email.com'},
+                                        'password2': '12345678ABCRR', 'email': 'abc@email.com', 'name': 'random name'},
                                        self.user_test,
                                        self.factory.post, format='json')
 
