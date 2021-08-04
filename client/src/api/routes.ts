@@ -7,7 +7,7 @@ export const fetchPostsRoute = (): string => API_PREPEND + "/poll/";
 export const createPostRoute = (): string => API_PREPEND + `/poll/create/`;
 
 // RATE
-export const ratePostRoute = (): string => API_PREPEND + `/rating/rate`;
+export const ratePostRoute = (): string => API_PREPEND + `/rating/rate/`;
 
 // COMMENTS
 export const commentsRoute = (): string => API_PREPEND + `/comment/`;

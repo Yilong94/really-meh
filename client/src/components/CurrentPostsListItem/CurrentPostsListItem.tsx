@@ -43,26 +43,25 @@ const CurrentPostsListItem: FC<Props> = ({
     data: { data: newUserRatings } = {},
   } = useMutation(ReactQueryKey.RATE_POST, ratePost);
 
-  const [pollData, setPollData] = useState<
-    Pick<Post, "userRatings" | "userHasRated">
-  >({
-    userRatings: initialRating,
-    userHasRated: null,
-  });
+  const [userRatingsState, setUserRatingsState] =
+    useState<Post["userRatings"]>(initialRating);
+  const [userHasRatedState, setUserHasRatedState] =
+    useState<Post["userHasRated"]>(null);
+
   useEffect(() => {
-    setPollData({
-      ...pollData,
-      userRatings: { ...pollData.userRatings, ...userRatings },
+    setUserRatingsState({
+      ...userRatingsState,
+      ...userRatings,
     });
   }, [userRatings]);
   useEffect(() => {
-    setPollData({ ...pollData, userHasRated });
+    setUserHasRatedState(userHasRated);
   }, [userHasRated]);
   useEffect(() => {
     newUserRatings &&
-      setPollData({
-        ...pollData,
-        userRatings: { ...pollData.userRatings, ...newUserRatings },
+      setUserRatingsState({
+        ...userRatingsState,
+        ...newUserRatings,
       });
   }, [newUserRatings]);
 
@@ -71,27 +70,27 @@ const CurrentPostsListItem: FC<Props> = ({
   const publishedAtFormatted = moment(publishedAt).fromNow();
   const dataFormatted = useMemo(
     () =>
-      Object.keys(pollData.userRatings).reduce((acc, val) => {
+      Object.keys(userRatingsState).reduce((acc, val) => {
         return {
           ...acc,
           [fakeNewsPollLabelMap[val]]: (
-            pollData.userRatings as { [key: string]: number }
+            userRatingsState as { [key: string]: number }
           )[val],
         };
       }, {}),
-    [pollData.userRatings]
+    [userRatingsState]
   );
   const labelFormatted = useMemo(
     () =>
-      Object.keys(pollData.userRatings).reduce((acc, val) => {
+      Object.keys(userRatingsState).reduce((acc, val) => {
         return { ...acc, [val]: fakeNewsPollLabelMap[val] };
       }, {}),
-    [pollData.userRatings]
+    [userRatingsState]
   );
 
   const handlePollClick = useMemo(() => {
     return (key: string) => {
-      setPollData({ ...pollData, userHasRated: key as Rating });
+      setUserHasRatedState(key as Rating);
       // TODO: hardcoded user id
       mutate({
         user: 1,
@@ -125,7 +124,7 @@ const CurrentPostsListItem: FC<Props> = ({
         <div className="flex justify-center">
           <FontAwesomeIcon icon={faSpinner} className="w-5 h-5 animate-spin" />
         </div>
-      ) : pollData.userHasRated ? (
+      ) : userHasRatedState ? (
         <BarGraph data={dataFormatted} question={POLL_QUESTION} />
       ) : (
         <BarPoll

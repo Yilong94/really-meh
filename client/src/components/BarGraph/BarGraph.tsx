@@ -14,10 +14,8 @@ const BarColumn: FC<BarColumnProps> = ({
   color = "bg-gray-300",
   selected,
 }) => {
-  const roundedValue = Math.round(value * 100);
-
   const style: CSSProperties = {
-    width: `${roundedValue}%`,
+    width: `${value}%`,
   };
 
   const barClass = classNames("flex items-center h-5", color);
@@ -30,7 +28,7 @@ const BarColumn: FC<BarColumnProps> = ({
         </div>
       </div>
 
-      <div className="ml-2 text-xs">{`${roundedValue}%`}</div>
+      <div className="ml-2 text-xs">{`${value}%`}</div>
     </div>
   );
 };

@@ -169,20 +169,6 @@ export const ratePost = async ({
       }
     );
 
-    // TODO: Remove mock data
-    // const res = {
-    //   data: {
-    //     data: {
-    //       TR: 10,
-    //       SW_TR: 20,
-    //       SW_FSE: 30,
-    //       FSE: 40,
-    //     },
-    //   },
-    // };
-
-    // await delay(3000);
-
     return res.data;
   } catch (err) {
     throw err;
