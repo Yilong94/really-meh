@@ -23,7 +23,7 @@ const SearchBar: FC<Props> = ({ searchValue, onSearchValueChange }) => {
         <input
           value={searchValue}
           onChange={handleChange}
-          placeholder="Search"
+          placeholder="Search for polls..."
           className="flex-grow"
         ></input>
       </div>

@@ -15,7 +15,7 @@ const BarPoll: FC<Props> = ({ question, label, onClick }) => {
   };
 
   return (
-    <div className="flex flex-col p-2 border border-black">
+    <div className="flex flex-col p-2 border-2 border-black rounded-md">
       <div className="mb-2 text-sm font-bold">{question}</div>
       <div className="flex flex-col space-y-1">
         {Object.keys(label).map((key, index) => {

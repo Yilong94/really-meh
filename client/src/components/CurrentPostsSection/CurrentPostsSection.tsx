@@ -66,15 +66,13 @@ const CurrentPostsSection: FC = () => {
   };
 
   return (
-    <ResponsiveContainer className="flex-grow bg-white">
-      <div className="px-4 py-2">
+    <ResponsiveContainer className="flex-grow mt-2">
+      <div className="px-4 py-2 bg-white">
         <SearchBar
           searchValue={searchValue}
           onSearchValueChange={handleSearchValueChange}
         />
       </div>
-
-      <div className="border-b border-gray-400" />
 
       <CurrentPostsList currentPosts={currentPosts} />
 

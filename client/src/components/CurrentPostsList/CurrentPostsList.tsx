@@ -9,13 +9,9 @@ interface Props {
 
 const CurrentPostsList: FC<Props> = ({ currentPosts }) => {
   return (
-    <div>
+    <div className="mt-2">
       {currentPosts.map((currentPost, index) => {
-        return (
-          <div key={index} className="border-b border-gray-400 last:border-b-0">
-            <CurrentPostsListItem {...currentPost} />
-          </div>
-        );
+        return <CurrentPostsListItem key={index} {...currentPost} />;
       })}
     </div>
   );

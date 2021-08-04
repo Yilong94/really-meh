@@ -105,7 +105,7 @@ const CurrentPostsListItem: FC<Props> = ({
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 mt-2 bg-white">
       <div className="text-xs">{`Posted by ${
         creatorUser.name || "Unknown"
       }`}</div>
