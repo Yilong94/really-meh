@@ -5,7 +5,6 @@ from extended_user.serializers import ExtendedUserForPollSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    creatorUser = ExtendedUserForPollSerializer()
     class Meta:
         model = Comment
         fields = ['id', 'content', 'creatorUser', 'poll', 'editedAt', 'publishedAt', 'archivedAt']
