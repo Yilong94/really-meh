@@ -9,3 +9,8 @@ class ExtendedUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ExtendedUserForPollSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExtendedUser
+        fields = ['id', 'name']
+

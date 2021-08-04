@@ -72,7 +72,7 @@ class UpdateRatingTestCase(RatingTestCase):
                                        format='json')
 
         result = self.view(request)
-        expected_data = {'id': 1, 'rating': TRUE, 'user': self.user_test.pk, 'poll': self.availablePoll.pk}
+        expected_data = {'data': {'TR': 1}}
         self.assertDictEqual(result.data, expected_data)
 
         rating = Rating.objects.filter(poll=self.availablePoll, user=self.user_test)

@@ -22,10 +22,14 @@ class AvailablePolls(generics.ListAPIView):
 
     def get_queryset(self):
         search_string = self.request.query_params.get('search-string')
+        poll_id = self.request.query_params.get('poll-id')
 
         available_cond = Q(publishedAt__isnull=False) & Q(archivedAt__isnull=True)
         if search_string:
             available_cond &= Q(content__contains=search_string)
+
+        if poll_id:
+            available_cond &= Q(id=poll_id)
 
         return self.queryset.filter(available_cond)
 

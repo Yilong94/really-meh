@@ -12,6 +12,7 @@ class Poll(models.Model):
     archivedAt = models.DateTimeField(default=None, null=True, blank=True)
     publishedAt = models.DateTimeField(default=None, null=True, blank=True)
     editedAt = models.DateTimeField(default=None, null=True, blank=True)
+    closedAt = models.DateTimeField(default=None, null=True, blank=True)
 
     ratings = models.ManyToManyField(
         'extended_user.ExtendedUser',
