@@ -44,8 +44,8 @@ const CommentsListItem: FC<Props> = ({
     setUserHasVotedState(userHasVoted);
   }, [userHasVoted]);
   useEffect(() => {
-    console.log("newUserVotes", newUserVotes);
-    newUserVotes && setUserVotesState({ ...userVotesState, ...newUserVotes });
+    newUserVotes &&
+      setUserVotesState({ ...userVotesState, ...newUserVotes.data });
   }, [newUserVotes]);
 
   const publishedAtFormatted = moment(publishedAt).fromNow();
@@ -66,7 +66,6 @@ const CommentsListItem: FC<Props> = ({
       }),
     [userHasVotedState]
   );
-  console.log("upVoteClass", upVoteClass);
 
   const handleVoteClick: MouseEventHandler<HTMLButtonElement> = useCallback(
     (event: any) => {
@@ -87,7 +86,6 @@ const CommentsListItem: FC<Props> = ({
         vote === Vote.UP
       ) {
         setUserHasVotedState(Vote.UP);
-        console.log("voting up");
       }
 
       // TODO: hardcoded user id
