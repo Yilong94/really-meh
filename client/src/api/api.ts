@@ -1,7 +1,8 @@
 import axios from "axios";
 
 import { Comment, CommentVote } from "../entities/Comment";
-import { CurrentPost } from "../entities/CurrentPost";
+import { Post } from "../entities/Post";
+import { Rating } from "../entities/Rating";
 import { delay } from "../utils";
 import * as routes from "./routes";
 
@@ -20,243 +21,52 @@ export const fetchOfficialStatements = async () => {
   }
 };
 
-// export const fetchRecentPosts = async (limit: number, offset: number) => {
-//   try {
-//     const res = await axios.post(
-//       routes.postsRoute,
-//       {
-//         limit,
-//         offset,
-//       },
-//       {
-//         headers: {
-//           Accept: "application/json",
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     return res.data;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
-// export const fetchSimilarPosts = async (searchValue: string) => {
-//   try {
-//     const res = await axios.post(
-//       routes.postsRoute,
-//       {
-//         search: searchValue,
-//       },
-//       {
-//         headers: {
-//           Accept: "application/json",
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     return res.data;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+interface FetchPostsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Post[];
+}
 
 export const fetchPosts = async (
+  userId: number,
+  postId?: number,
   search?: string,
   page?: number
-): Promise<CurrentPost[]> => {
+): Promise<FetchPostsResponse> => {
   console.log("search", search);
   console.log("page", page);
   try {
-    // const params = new URLSearchParams({
-    //   ...(search && { search }),
-    //   ...(page && { page: `${page}` }),
-    // });
+    const params = new URLSearchParams({
+      "user-id": `${userId}`,
+      ...(postId && { "post-id": `${postId}` }),
+      ...(search && { search }),
+      ...(page && { page: `${page}` }),
+    });
 
-    // const res = await axios.get(`${routes.postsRoute}?${params.toString()}`, {
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    // TODO: Remove mock data
-    const res = {
-      data: [
-        {
-          postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-          creator: "Angelina Than Xiao Mei",
-          createdAt: "2021-01-11T10:00:00",
-          title: "Poll title",
-          tags: ["COVID-19"],
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-          poll: {
-            data: {
-              true: 0.0,
-              "sw true": 0.3,
-              "sw false": 0.4,
-              false: 1.0,
-            },
-            hasVoted: true,
-          },
-          numComment: 123,
-          comments: [
-            {
-              commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-              creator: "Gary Lim",
-              createdAt: "2021-01-12T10:00:00",
-              content:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-              upVote: 213,
-              downVote: 23,
-              selfVote: "upVote",
-            },
-          ],
+    const res = await axios.get(
+      `${routes.fetchPostsRoute()}?${params.toString()}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        {
-          postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-          creator: "Angelina Than Xiao Mei",
-          createdAt: "2021-01-11T10:00:00",
-          title: "Poll title",
-          tags: ["COVID-19"],
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-          poll: {
-            data: {
-              true: 0.2,
-              "sw true": 0.3,
-              "sw false": 0.4,
-              false: 0.1,
-            },
-            hasVoted: true,
-          },
-          numComment: 123,
-          comments: [
-            {
-              commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-              creator: "Gary Lim",
-              createdAt: "2021-01-12T10:00:00",
-              content:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-              upVote: 213,
-              downVote: 23,
-              selfVote: "upVote",
-            },
-          ],
-        },
-        {
-          postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-          creator: "Angelina Than Xiao Mei",
-          createdAt: "2021-01-11T10:00:00",
-          title: "Poll title",
-          tags: ["COVID-19"],
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-          poll: {
-            data: {
-              true: 0.2,
-              "sw true": 0.3,
-              "sw false": 0.4,
-              false: 0.1,
-            },
-            hasVoted: false,
-          },
-          numComment: 123,
-          comments: [
-            {
-              commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-              creator: "Gary Lim",
-              createdAt: "2021-01-12T10:00:00",
-              content:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-              upVote: 213,
-              downVote: 23,
-              selfVote: "upVote",
-            },
-          ],
-        },
-      ],
+      }
+    );
+    const { data } = res;
+    const formattedData = {
+      ...data,
+      results: data.results.map((result: any) => {
+        return {
+          ...result,
+          tags: JSON.parse(result.tags),
+        };
+      }),
     };
 
-    await delay(3000);
-
-    return res.data;
+    return formattedData;
   } catch (err) {
-    throw err;
-  }
-};
-
-export const fetchPost = async (postId: string): Promise<CurrentPost> => {
-  try {
-    // const res = await axios.get(routes.postRoute(postId), {
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    // TODO: Remove mock data
-    const res = {
-      data: {
-        postId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-        creator: "Angelina Than Xiao Mei",
-        createdAt: "2021-01-11T10:00:00",
-        title: "Poll title",
-        tags: ["COVID-19"],
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien odio vel tellus etiam vel pellentesque risus malesuada et. Ac feugiat tortor, at condimentum purus elit dui. Sit id in massa mattis at neque. Ultricies et nisl sit id viverra volutpat .....",
-        poll: {
-          data: {
-            true: 0.0,
-            "sw true": 0.3,
-            "sw false": 0.4,
-            false: 1.0,
-          },
-          hasVoted: true,
-        },
-        numComment: 123,
-        comments: [
-          {
-            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-            creator: "Gary Lim",
-            createdAt: "2021-01-12T10:00:00",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-            upVote: 213,
-            downVote: 23,
-            selfVote: "upVote",
-          },
-          {
-            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-            creator: "Gary Lim",
-            createdAt: "2021-01-12T10:00:00",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-            upVote: 213,
-            downVote: 23,
-            selfVote: "upVote",
-          },
-          {
-            commentId: "3449a397-71ea-4230-8bae-2b2563bcabd7",
-            creator: "Gary Lim",
-            createdAt: "2021-01-12T10:00:00",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel orci ultrices sapien. Morbi malesuada nisi, id tincidunt morbi. Id nibh tincidunt lacinia a ut quis pretium urna elit. Feugiat dolor vitae facilisi scelerisque nec egestas sed ac, sit. Lectus sagittis congue in eu aliquet massa lobortis sed.",
-            upVote: 213,
-            downVote: 23,
-            selfVote: "upVote",
-          },
-        ],
-      },
-    };
-
-    await delay(3000);
-
-    return res.data;
-  } catch (err) {
+    console.log(err);
     throw err;
   }
 };
@@ -323,43 +133,55 @@ export const fetchComments = async (
   }
 };
 
+interface RatePostRequest {
+  user: number;
+  poll: number;
+  rating: Rating;
+}
+
+interface RatePostResponse {
+  data: {
+    TR: number;
+    SW_TR: number;
+    SW_FSE: number;
+    FSE: number;
+  };
+}
+
 export const ratePost = async ({
-  userId,
-  postId,
-  labelKey,
-}: {
-  userId: string;
-  postId: string;
-  labelKey: string;
-}): Promise<{ rating: { [label: string]: number } }> => {
+  user,
+  poll,
+  rating,
+}: RatePostRequest): Promise<RatePostResponse> => {
   try {
-    //   const res = await axios.post(
-    //     routes.ratePostRoute(postId),
-    //     {
-    //       user: userId,
-    //       label: labelKey,
-    //     },
-    //     {
-    //       headers: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json",
-    //       },
-    //     }
-    //   );
+    const res = await axios.post(
+      routes.ratePostRoute(),
+      {
+        user,
+        poll,
+        rating,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     // TODO: Remove mock data
-    const res = {
-      data: {
-        rating: {
-          true: 0.0,
-          "sw true": 0.3,
-          "sw false": 0.4,
-          false: 1.0,
-        },
-      },
-    };
+    // const res = {
+    //   data: {
+    //     data: {
+    //       TR: 10,
+    //       SW_TR: 20,
+    //       SW_FSE: 30,
+    //       FSE: 40,
+    //     },
+    //   },
+    // };
 
-    await delay(3000);
+    // await delay(3000);
 
     return res.data;
   } catch (err) {
@@ -378,7 +200,7 @@ export const commentPost = async ({
 }) => {
   try {
     const res = await axios.post(
-      routes.commentsRoute(postId),
+      routes.commentsRoute(),
       {
         user: userId,
         comment: comment,

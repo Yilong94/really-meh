@@ -1,10 +1,10 @@
 import { FC } from "react";
 
-import { CurrentPost } from "../../entities/CurrentPost";
+import { Post } from "../../entities/Post";
 import CurrentPostsListItem from "../CurrentPostsListItem";
 
 interface Props {
-  currentPosts: CurrentPost[];
+  currentPosts: Post[];
 }
 
 const CurrentPostsList: FC<Props> = ({ currentPosts }) => {

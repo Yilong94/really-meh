@@ -8,8 +8,8 @@ import { useQuery } from "react-query";
 
 import { fetchPosts } from "../../api";
 import { ReactQueryKey } from "../../constants";
-import { CurrentPost } from "../../entities/CurrentPost";
-import { useOnScreen } from "../../utils/hooks";
+import { Post } from "../../entities/Post";
+import { useOnScreen, usePrevious } from "../../utils/hooks";
 import CurrentPostsList from "../CurrentPostsList";
 import ResponsiveContainer from "../ResponsiveContainer";
 import SearchBar from "../SearchBar";
@@ -17,18 +17,22 @@ import SearchBar from "../SearchBar";
 const CurrentPostsSection: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [maxPage, setMaxPage] = useState(0);
-  const [currentPosts, setCurrentPosts] = useState<CurrentPost[]>([]);
+  const [currentPosts, setCurrentPosts] = useState<Post[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const isEndOfPage = useOnScreen(ref);
 
   const { isFetching, refetch } = useQuery(
     ReactQueryKey.POSTS,
-    async () => await fetchPosts(searchValue, maxPage),
+    // TODO: hardcoded user id
+    async () => await fetchPosts(1, undefined, searchValue, maxPage),
     {
       enabled: false,
       refetchOnWindowFocus: false,
-      onSuccess: (data: CurrentPost[]) => {
-        setCurrentPosts([...currentPosts, ...data]);
+      onSuccess: (data) => {
+        console.log("is success!");
+        const newPosts = data.results;
+        console.log(newPosts);
+        setCurrentPosts([...currentPosts, ...newPosts]);
       },
     }
   );
@@ -42,17 +46,19 @@ const CurrentPostsSection: FC = () => {
     []
   );
 
-  useEffect(() => {
-    refetch();
-  }, []);
-  useEffect(() => {
-    refetch();
-  }, [maxPage]);
-  useEffect(() => {
-    if (isEndOfPage && !isFetching) {
-      setMaxPage(maxPage + 1);
-    }
-  }, [isEndOfPage, isFetching, currentPosts]);
+  const previousIsEndOfPage = usePrevious(isEndOfPage);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, [maxPage]);
+  // useEffect(() => {
+  //   if (!!previousIsEndOfPage && isEndOfPage && !isFetching) {
+  //     setMaxPage(maxPage + 1);
+  //   }
+  // }, [previousIsEndOfPage, isEndOfPage, isFetching]);
   useEffect(() => {
     debouncedRefetch();
   }, [searchValue]);
@@ -60,6 +66,8 @@ const CurrentPostsSection: FC = () => {
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value);
   };
+
+  console.log("currentPosts", currentPosts);
 
   return (
     <ResponsiveContainer className="flex-grow bg-white">
