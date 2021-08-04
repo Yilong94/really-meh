@@ -48,7 +48,8 @@ class AvailablePollTestCase(PollTestCase):
         self.view = views.AvailablePolls.as_view()
         self.archivedPoll = Poll.objects.create(content="I'm archived", publishedAt=datetime.now(),
                                                 archivedAt=datetime.now())
-        self.availablePoll = Poll.objects.create(content="I'm available", publishedAt=datetime.now())
+        self.availablePoll = Poll.objects.create(content="I'm available", publishedAt=datetime.now(),
+                                                 creatorUser=self.user_test)
         self.maxDiff = None
 
     def test_get_available(self):
@@ -111,6 +112,23 @@ class AvailablePollTestCase(PollTestCase):
         for index, poll in enumerate(dict_response_data['results']):
             serializer = AvailablePollSerializer(expected_polls[index], context={"user_id": self.another_user.id})
             self.assertDictEqual(serializer.data, poll)
+
+    def test_search_available_limited_to_id(self):
+        self.availablePoll2 = Poll.objects.create(content="I'm available too", publishedAt=datetime.now())
+
+        request = self.get_api_request('poll:available_polls', {'search-string': 'available',
+                                                                'user-id': self.user_test.id,
+                                                                'poll-id': self.availablePoll2.id}, self.user_test,
+                                       self.factory.get, format='json')
+
+        response = self.view(request)
+        dict_response_data = dict(response.data)
+
+        self.assertEqual(len(dict_response_data['results']), 1)
+
+        serializer = AvailablePollSerializer(self.availablePoll2)
+        expected_data = serializer.data
+        self.assertDictEqual(expected_data, dict_response_data['results'][0])
 
 
 class CreatePollTestCase(PollTestCase):
