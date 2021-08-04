@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'reallymeh.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'reallymeh',
+        'NAME': 'db.sqlite3',
     }
 }
 
