@@ -7,7 +7,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 # Create your tests here.
 from comment import views
 from comment.models import Comment
-from comment.serializers import AvailableCommentSerializer
+from comment.serializers import AvailableCommentSerializer, CommentSerializer
 from extended_user.models import ExtendedUser
 from poll.models import Poll
 from vote.choices import UP
@@ -24,7 +24,15 @@ class CommentTestCase(TestCase):
 
         cls.factory = APIRequestFactory()
 
-        cls.availablePoll = Poll.objects.create(title='123', content='1234', publishedAt=datetime.now())
+        cls.available_poll = Poll.objects.create(title='123', content='1234', publishedAt=datetime.now())
+
+        cls.today = datetime(2021, 8, 4, 18, 00)
+        cls.create_data = {
+            "content": 'abcdef',
+            "creatorUser": cls.user_test.pk,
+            "poll": cls.available_poll.pk,
+            "publishedAt": cls.today
+        }
 
     @classmethod
     def get_api_request(cls, reverse_url, data, authenticating_user, factory_func, **kwargs):
@@ -47,7 +55,8 @@ class AvailableCommentsTestCase(CommentTestCase):
         self.view = views.AvailableComments.as_view()
 
     def test_get(self):
-        comment = Comment.objects.create(content='abc', creatorUser=self.user_test, poll=self.availablePoll, publishedAt=datetime.now())
+        comment = Comment.objects.create(content='abc', creatorUser=self.user_test, poll=self.available_poll,
+                                         publishedAt=datetime.now())
 
         user_test = ExtendedUser.objects.create(username='some user 1', email='email1@email.com')
 
@@ -69,8 +78,39 @@ class CreateCommentsTestCase(CommentTestCase):
         self.view = views.CreateComment.as_view()
 
     def test_create(self):
-        request = self.get_api_request('comment:create_comment', {}, self.user_test, self.factory.get,
+        request = self.get_api_request('comment:create_comment', self.create_data, self.user_test, self.factory.post,
                                        format='json')
 
         response = self.view(request)
 
+        self.assertDictEqual(response.data, {'id': 1, 'creatorUser': self.user_test.pk, 'poll': self.available_poll.pk,
+                                             'content': 'abcdef',
+                                             'editedAt': None,
+                                             'publishedAt': self.today.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                                             'archivedAt': None})
+
+        comment_count = Comment.objects.filter(creatorUser=self.user_test, poll=self.available_poll).count()
+        self.assertEqual(comment_count, 1)
+
+
+class UpdateCommentsTestCase(CommentTestCase):
+    def setUp(self):
+        self.view = views.UpdateComment.as_view()
+
+    def test_update(self):
+        comment = Comment.objects.create(content='abc', creatorUser=self.user_test, poll=self.available_poll,
+                                         publishedAt=datetime.now())
+
+        self.create_data['content'] = "I'm updated!"
+        # request = self.get_api_request('comment:update_comment', self.create_data, self.user_test, self.factory.patch,
+        #                                format='json')
+
+
+        response = self.view_helper('comment:update_comment', comment.pk, self.create_data, self.factory.put, self.view)
+
+        comment.refresh_from_db()
+        expected_data = CommentSerializer(instance=comment).data
+        print(response.data)
+        print(expected_data)
+
+        self.assertDictEqual(response.data, expected_data)
