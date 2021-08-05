@@ -9,12 +9,18 @@ import * as routes from "./routes";
 
 export const fetchOfficialStatements = async () => {
   try {
-    const res = await axios.get(routes.officialStatementsRoute, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    // const res = await axios.get(routes.officialStatementsRoute, {
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+
+    const res = {
+      data: 1,
+    };
+
+    await delay(1000);
 
     return res.data;
   } catch (err) {
