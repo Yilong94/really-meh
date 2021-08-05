@@ -103,7 +103,7 @@ const CommentsListItem: FC<Props> = ({
   return (
     <div className="p-4">
       <div className="flex justify-between text-xs">
-        <div>Commented by {creatorUser.name}</div>
+        <div>Commented by {creatorUser?.name}</div>
         <div>{publishedAtFormatted}</div>
       </div>
       <div className="my-2 text-base">{content}</div>
