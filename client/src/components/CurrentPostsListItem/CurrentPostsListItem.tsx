@@ -72,6 +72,10 @@ const CurrentPostsListItem: FC<Props> = ({
   const dataFormatted = useMemo(
     () =>
       Object.keys(userRatingsState).reduce((acc, val) => {
+        if (!Object.keys(initialRating).includes(val)) {
+          return acc;
+        }
+
         return {
           ...acc,
           [fakeNewsPollLabelMap[val]]: (
