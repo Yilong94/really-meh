@@ -34,6 +34,7 @@ const SinglePostSection: FC = () => {
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
+        data.results.reverse();
         setComments([...data.results]);
       },
     }

@@ -1,12 +1,13 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { QueryObserverResult, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 
 import { commentPoll, FetchCommentsResponse } from "../../api";
 import { ReactQueryKey, SortBy } from "../../constants";
 import { Comment } from "../../entities/Comment";
+import { getUserId } from "../../utils";
 import CommentsListItem from "../CommentsListItem";
 import { BottomSheet } from "./components/BottomSheet";
 
@@ -48,7 +49,7 @@ const CommentsList: FC<Props> = ({ comments, refetch }) => {
 
   const handlePollComment = () => {
     mutate({
-      userId: 1,
+      userId: getUserId(),
       pollId,
       content: comment,
     });
@@ -82,7 +83,7 @@ const CommentsList: FC<Props> = ({ comments, refetch }) => {
         </button>
       </div>
       <div className="bg-white">
-        {comments.map((comment, index) => {
+        {comments.reverse().map((comment, index) => {
           return <CommentsListItem key={index} {...comment} />;
         })}
       </div>

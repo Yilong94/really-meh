@@ -215,7 +215,7 @@ export const commentPoll = async ({
     const res = await axios.post(
       routes.createCommentRoute(),
       {
-        user: userId,
+        creatorUser: userId,
         poll: pollId,
         content,
       },
