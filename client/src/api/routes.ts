@@ -1,4 +1,4 @@
-export const API_PREPEND = "http://localhost:8000/api";
+export const API_PREPEND = `${process.env.REACT_APP_BACKEND_HOSTNAME}/api`;
 
 export const officialStatementsRoute = API_PREPEND + "/official-statements";
 
