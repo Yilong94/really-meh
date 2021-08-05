@@ -57,6 +57,7 @@ const FormInput: FC<Props> = ({
         Component
       ) : (
         <input
+          style={{ outline: "none" }}
           id={id}
           value={value}
           onChange={onChange}
