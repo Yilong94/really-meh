@@ -134,7 +134,8 @@ AUTH_USER_MODEL = 'extended_user.ExtendedUser'
 # CORS
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http:\/\/127\.0\.0\.1:[0-9]+',
-    'http:\/\/localhost:[0-9]+'
+    'http:\/\/localhost:[0-9]+',
+    'https:\/\/really-meh.netlify.app'
 ]
 
 # Static files
