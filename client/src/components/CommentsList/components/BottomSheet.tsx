@@ -58,7 +58,7 @@ const BottomSheet: FC<Props> = (Props) => {
               style={{
                 position: "absolute",
                 top: "25px",
-                right: "45px",
+                right: "7%",
                 color: "#757575",
               }}
               icon={faExpandAlt}
