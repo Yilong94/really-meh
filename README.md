@@ -35,7 +35,7 @@ npm run build
 4. Sign in and deploy to Netlify
 
 ```
-netflix deploy --prod --dir=./build
+netlify deploy --prod --dir=./build
 ```
 
 ### Server
