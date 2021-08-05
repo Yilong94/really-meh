@@ -29,8 +29,9 @@ const CurrentPostsSection: FC = () => {
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        const newPosts = data.results;
-        setCurrentPosts([...currentPosts, ...newPosts]);
+        const newPosts = data.results.reverse();
+        console.log("newposts", newPosts);
+        setCurrentPosts([...newPosts]);
       },
     }
   );
