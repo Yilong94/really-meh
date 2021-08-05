@@ -164,6 +164,7 @@ const NewPollForm: FC = () => {
                 <>
                   <div className="flex flex-col px-4 py-2">
                     <textarea
+                      style={{ outline: "none", resize: "none" }}
                       id="content"
                       className="min-h-24"
                       placeholder="Copy paste the information you saw / received here"
