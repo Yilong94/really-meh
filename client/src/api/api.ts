@@ -165,7 +165,7 @@ export const ratePost = async ({
 // COMMENTS
 ////////////////////////////////
 
-interface FetchCommentsResponse {
+export interface FetchCommentsResponse {
   count: number;
   next: string | null;
   previous: string | null;

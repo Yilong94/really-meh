@@ -34,7 +34,7 @@ const SinglePostSection: FC = () => {
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        setComments([...comments, ...data.results]);
+        setComments([...data.results]);
       },
     }
   );
@@ -63,7 +63,7 @@ const SinglePostSection: FC = () => {
       ) : (
         <>
           <CurrentPostsListItem {...(singlePost?.results[0] as Post)} />
-          <CommentsList comments={comments} />
+          <CommentsList refetch={refetch} comments={comments} />
         </>
       )}
     </ResponsiveContainer>

@@ -1,10 +1,10 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, useState } from "react";
-import { useMutation } from "react-query";
+import { QueryObserverResult, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { commentPoll } from "../../api";
+import { commentPoll, FetchCommentsResponse } from "../../api";
 import { ReactQueryKey, SortBy } from "../../constants";
 import { Comment } from "../../entities/Comment";
 import CommentsListItem from "../CommentsListItem";
@@ -12,16 +12,18 @@ import { BottomSheet } from "./components/BottomSheet";
 
 interface Props {
   comments: Comment[];
+  refetch: () => Promise<QueryObserverResult<FetchCommentsResponse, unknown>>;
 }
 
-const CommentsList: FC<Props> = ({ comments }) => {
+const CommentsList: FC<Props> = ({ comments, refetch }) => {
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.TOP);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
   const { id: pollId } = useParams<{ id: string }>();
   const { mutate, isLoading, data } = useMutation(
     ReactQueryKey.VOTE_COMMENT,
-    commentPoll
+    commentPoll,
+    { onSuccess: () => refetch() }
   );
 
   const numComments = comments.length;
@@ -50,6 +52,8 @@ const CommentsList: FC<Props> = ({ comments }) => {
       pollId,
       content: comment,
     });
+    setOpen(false);
+    setComment("");
   };
 
   return (
