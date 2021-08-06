@@ -19,6 +19,7 @@ const NewPostSection: FC = () => {
       <div className="flex-grow border-2 border-yellow-300 rounded-md divide-y-2 divide-yellow-300">
         <div className="p-2">
           <textarea
+            style={{ outline: "none" }}
             className="w-full h-full"
             placeholder="What fake news did you spot today?"
             onClick={handleClick}

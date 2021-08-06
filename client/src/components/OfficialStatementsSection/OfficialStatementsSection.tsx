@@ -6,19 +6,23 @@ import ResponsiveContainer from "../ResponsiveContainer";
 
 const officialStatements: OfficialStatement[] = [
   {
-    statement: "False COVID remedies circulating on Whatsapp",
+    statement:
+      "False statements on SST Facebook page on reporting of COVID-19 cases",
     ministry: "Ministry of Health",
   },
   {
-    statement: "False COVID remedies circulating on Whatsapp",
+    statement:
+      "False rumour circulating that COVID-19 patients ran away from a hospital",
     ministry: "Ministry of Health",
   },
   {
-    statement: "False COVID remedies circulating on Whatsapp",
+    statement:
+      "False rumours that Singapore will be going into lockdown next Monday (03/12/20)",
     ministry: "Ministry of Health",
   },
   {
-    statement: "False COVID remedies circulating on Whatsapp",
+    statement:
+      "Fake news that all schools will close next Monday due to COVID-19 outbreak",
     ministry: "Ministry of Health",
   },
 ];

@@ -21,6 +21,7 @@ const SearchBar: FC<Props> = ({ searchValue, onSearchValueChange }) => {
           icon={faSearch}
         ></FontAwesomeIcon>
         <input
+          style={{ outline: "none" }}
           value={searchValue}
           onChange={handleChange}
           placeholder="Search for polls..."
